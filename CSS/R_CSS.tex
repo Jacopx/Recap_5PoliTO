@@ -91,12 +91,32 @@ An important part of the security study is the Risk Estimation, is a fundamental
   \label{fig:risk_est}
 \end{figure}
 
-Where the assets is composed by everythings needed by a service to work, both soft and hard part, also human resources. The vulnerabilities, intrinsic of an asset, represent the weakness of it. The threats is a deliberate action, or an accidental event, that can produce the loss of a security properties exploting a vulnerability. The event is also characterized by an impact and a probability that could be high, low or other middle values.
+Where the assets is composed by everythings needed by a service to work, both soft and hard part, also human resources. The vulnerabilities, intrinsic of an asset, represent the weakness of it. The threats is a deliberate action, or an accidental event, that can produce the loss of a security properties exploting a vulnerability. The event is also characterized by an impact and a probability that could be high, low or other middle values.\\
+Direct following of the risk estimation is the Analysis and management of security. After the evaluation of risks, is necessary to:
+\begin{enumerate}
+  \item Select Countermeasures
+  \item Implement Countermeasures
+  \item Audit (check if works)
+\end{enumerate}
 
+The security implement is not a phase of the developmente process, is part of each sigle part of it. Security can't be compute at the end of the development, it must be implement from the beginning of the process. \textbf{Security is a process, not a product!} The following figure \ref{fig:dev} show the parallel line followed by the security development.
 
+\begin{figure}[h!]
+  \includegraphics[width=\linewidth]{images/dev.png}
+  \caption{Security Life Cycle}
+  \label{fig:dev}
+\end{figure}
 
+An important definition, before speaking about security itself, is the \textbf{Window of Exposure} the represent the time when an attack could be perfomed and there are no countermeasures to avoid it. This window could potentially be infinite and this is the real problem.
+The figure \ref{fig:window} show how this windows id divided in different part:
 
+\begin{figure}[h!]
+  \includegraphics[width=\linewidth]{images/window.png}
+  \caption{Window of Exposure}
+  \label{fig:window}
+\end{figure}
 
+As already says, security is not a product but is a proccess. Computer flaws are inevitable and this is way we can't use devote our security to only secured products. The only way to effectively do business is an insecure world is to put processes in place that recognize the inheritent insecurity in the products. \textbf{The trick is to reduce your risk of exposure regardless of the products or patches}.
 
 
 
