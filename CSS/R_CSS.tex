@@ -118,7 +118,80 @@ The figure \ref{fig:window} show how this windows id divided in different part:
 
 As already says, security is not a product but is a proccess. Computer flaws are inevitable and this is way we can't use devote our security to only secured products. The only way to effectively do business is an insecure world is to put processes in place that recognize the inheritent insecurity in the products. \textbf{The trick is to reduce your risk of exposure regardless of the products or patches}.
 
+\paragraph{Security Principles} Here some of the most important security principles:
+\begin{itemize}
+  \item Security by Design
+  \item Least Privilege: Only correct rights and the only few needed
+  \item Need-to-know: Access to the only piece of stuff that are needed
+  \item Security by Default
+  \item Security in Depth: More the importance of the system, more the obstacles
+\end{itemize}
 
+\paragraph{Security Properties} The following list show the most importante properties of the security world:
+\begin{itemize}
+  \item Authentication (Simple/Mutual): Source (or both) must prove themself
+  \item Data Origin/Authentication
+  \item Authorization and Access Control
+  \item Confidentiality/Privacy/Secrecy
+  \item Non Repudiation: Formal proof, acceptable by a court of justice, that gives undeniable evidence of the data creator
+  \item Availability
+  \item Accountability
+  \item Integrity: Modification, Filtering
+\end{itemize}
+
+\paragraph{Where is the enemy?} The enemy normally is supposed to be outside of our system but is not simple as it seems. The possible locations are:
+\begin{itemize}
+  \item Outside our organization (Firewall)
+  \item Outside our organization, with exceptionn of our parters (VPN)
+  \item Inside our organitazion
+  \item Everywhere!
+\end{itemize}
+The last item is probably the more true. The distinction between internal/external and good/bad guys is no more sufficent. From the \textit{Verizon Data Breach Invetigation Report} the percentage of source of attacks is: 20\% Internal and 80\% External, probably the internal percentage is a little bit higher due to the fact that Verizon is a provider and can't show the internal side so much.
+
+\paragraph{Basic Problems} There are some basic problem for security:
+\begin{itemize}
+  \item Networks are insecure:
+  \begin{itemize}
+    \item Clear communications
+    \item LAN use broadcast
+    \item Not E2E geographical connections
+  \end{itemize}
+  \item Weak user Authentication
+  \item No server Authentication
+  \item \textbf{Software with bugs!}
+\end{itemize}
+
+\paragraph{Classes of Attacks} Some of the most common type of attacks:
+\begin{itemize}
+  \item IP Spoofing / Shadow Server
+  \item Packet Sniffing
+  \item Connection Hijacking / Data Spoofing
+  \item Denial-of-Service (Distributed DoS)
+\end{itemize}
+The \textbf{IP Spoofig}, or source address spoofing, is forginng the sourcce network address, typically performed at LV3 (IP), but also at LV2 can be performed. The typical attacks are: Data Forging and unauthorized access to systems.\\
+The \textbf{Packet Spoofing} it reads the packet addresses to another network node, it easy to do in LAN or at the switching nodes. It allows to intercept password, data and other stuffs.\\
+The \textbf{Denial-of-Service (DoS)} it keeps a host busy so that it can't provide its services. There are a lots of examples: mail/log saturation, ping flooding, SYN attacks. The main problem of this kind of attacks is that there are no countermeasures. The \textbf{Distributed DoS} are similar to the previous one but perfomed by a greater number of hosts (botnet), controlled by a master. The power is the same of a normal DoS multiplied by the number of deamons of the botnet. There are also some techniques to improve the attack like using a reflector to hide the attacker's track. One of the more important DDoS was performed agains Yahoo! during Feb 2000.\\
+The \textbf{Shadow Server} is a technique that host that manage the attacks show itself (to victims) as a service provider without having the right to do so. It provide a "wrong" serice to victims, like bank sites or other stuffs.\\
+\textbf{Connection Hijacking / MITM}, AKA Data Spoofing, is performed when attacker takes control of a communicatio channel to insert, delete, or manipulate traffics. It can edit data is all forms, and change the messages of the communications. Another similar for is the \textbf{Trojan / MITB}, it used the fact that network channels are more protected, but users terminals not. The behaviour is to install a keylogger to store everything. It could be also passed via browser extension.\\
+The are other application-leve problems:
+\begin{itemize}
+  \item Buffer Overflow
+  \item Cookies
+  \item Clear password in DB
+  \item "invent" a protection system
+\end{itemize}
+We make now some clearance about name of malwares:
+\begin{itemize}
+  \item Virus: Damage the target and replicate itself, propagated by humans (require complicity)
+  \item Worm: Damage target because replications (resource saturation)
+  \item Trojan: Malware vector
+  \item Backdoor: Unauthorized access point
+  \item Rootkit: Privileged access tools, hidden and stealth
+  \item Ransomware: Make hosts unreadable (can be also silent)
+\end{itemize}
+
+\paragraph{Non technological problems} Prorably the greatest majority of the problems and leaks come from here! The are some basic problems: due to low awareness, mistakes, tendency to trust and other facts the major cause of leaks are humans.\\
+The \textbf{Social Engineering} are sets of techniques used to asks the involutary user's partecipatio to the attack action, usually the naïve users are targeted.
 
 
 
