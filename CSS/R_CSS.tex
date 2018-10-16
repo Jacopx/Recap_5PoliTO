@@ -219,11 +219,81 @@ and we can define the main figures:
 %         END SLIDE 1           |
 %--------------------------------
 
+\section{Basic of ICT security}
+\subsection{Cryptography Introduction}
+The basic principles of Cryptography are showed in the following figure
+\begin{figure}[H]
+  \includegraphics[width=\linewidth]{images/crypt.png}
+  \caption{Cryptography flow}
+  \label{fig:crypt}
+\end{figure}
+Some important terminology. The message in clear is called:
+\begin{itemize}
+  \item Cleartext or plaintext
+  \item Refer with \textbf{P}
+\end{itemize}
+Instead the encrypted message:
+\begin{itemize}
+  \item Ciphertext
+  \item Refer with \textbf{C}
+\end{itemize}
 
+Some principles of Cryptography, written by Kerchoffs, are:
+If the keys:
+\begin{itemize}
+  \item Are kept secret
+  \item Are managed only by trusted systems
+  \item Are of adeguate lenght
+\end{itemize}
+then...
+\begin{itemize}
+  \item it has no importance that the ecryption and decryption algorithms are kept secret
+  \item on the contrary it is better to make the algorithms public so that they can be widely analysed and their possible weaknesses identified
+\end{itemize}
+In computer system STO (Security Through Obscurity) is not good.\\
+An important operator of this world is the XOR function that is the ideal confusion operator, because it not change the probability. Is also a primitive operation present in all CPUs.
 
+\subsection{Symmetric Cryptography}
+Are all the algorithms based on a secret key shared between sender and receiver, used for encrypt and decrypt. Figure \ref{fig:symm} show the general flow of this kind of algorithms. The advantage are low computational cost, in fact is used for data encryption.\\
+\begin{itemize}
+  \item $C = enc(K, P)$
+  \item $P = dec(K, C) = enc^{-1}(K, C)$
+\end{itemize}
+One of the main problem is \textit{"How to share (securely) the secret key among sender and receiver?"}. T
+\begin{figure}[H]
+  \includegraphics[width=\linewidth]{images/symm.png}
+  \caption{Symmetric General flow}
+  \label{fig:symm}
+\end{figure}
+There is not a confirmation of correct decryption, is up to the user to understand if the result is correct or not, in any case a result is provided with any key.\\
 
+\paragraph{DES} (Data Encryption Standard) one of the first used by US government. Is now obsolete, is based on a key of 64 bits, composed by:
+\begin{itemize}
+  \item Key: 56 bits
+  \item Parity: 8 bits
+\end{itemize}
+This means that the actual bit of resistence is 56. It's based on 64 bits of data blocks. It is also designed to be efficent in hardware with poor performance, the flow is:
+\begin{enumerate}
+  \item XOR
+  \item Shift
+  \item Permutation (not so good performance)
+\end{enumerate}
 
+\paragraph{3DES} is the triple repeted application of DES, it used two of three 56 bits keys. Is different from passe to a keys long 56*3 because the key lenght will not match with that number of bits. It can be computed in two ways:
+\begin{itemize}
+  \item 2 Keys: $C = enc(K_1, dec(K_2, enc(K_1, P)))$
+  \item 3 Keys: $C = enc(K_3, dec(K_2, enc(K_1, P)))$
+\end{itemize}
+The central step of decryption is made to generated mess.\\
+An important issue of the encryption is the doubling of an algorithms. Double application of encryption algorithms is subject to a know-plaintext attack named \textbf{meet-in-the-middle} which allows to decrypt data with at most $2^N+1$ attempts (if the keys are N-bits long). Thus the double version is never used, it double the computation time and increase they key lenght of only one bit. The formulas are:
+\begin{itemize}
+  \item [] $C = enc(K2, enc(K1, P))$
+  \item [] $dec(C, K2) = dec(K2, enc(K2, enc(K1, P)))$
+  \item [] $dec(C, K2) = enc(K1, P)$
+\end{itemize}
+The attacker can compute ENC(K1, P) for all values of K1 and DEC(K2, C) for all possible values of K2, and add only 1 bit of strenght for 2 keys of the same size.
 
+\paragraph{IDEA}
 
 
 
