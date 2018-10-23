@@ -293,7 +293,135 @@ An important issue of the encryption is the doubling of an algorithms. Double ap
 \end{itemize}
 The attacker can compute ENC(K1, P) for all values of K1 and DEC(K2, C) for all possible values of K2, and add only 1 bit of strenght for 2 keys of the same size.
 
-\paragraph{IDEA}
+\paragraph{IDEA} International Data Encryption Algorithm it was patented but with low royalty, developed for 16 bits architectures. It use a 128 bits key and 64 bits of data block, it's famous because is used in PGP. The operation used are:
+\begin{itemize}
+  \item XOR
+  \item Addition Modulo 16
+  \item Multiplication Modulo $2^{16}+1$
+\end{itemize}
+
+\paragraph{RC2, RC4} other algorithms developed by Ron Rivest (Ron's Code), they are algorithm proprietary of RSA but not patented, 3 to 10 times faster than DES. RC2 is a block algorithm, RC4 is a stream one. They are using a variable length key.
+
+\paragraph{Application of block algorithms} applying these algorithm over data of size different from the block size require a little effort. When the data size is greater that the algorithm's block size:
+\begin{itemize}
+  \item ECB (Electronic Code Block)
+  \item CBC (Cipher Block Chaining)
+\end{itemize}
+In the other case:
+\begin{itemize}
+  \item Padding
+  \item CFB (Chiper FeedBack), OFB (Output FeedBack)
+  \item CTR (Counter Mode)
+\end{itemize}
+
+The frist solution \textbf{ECB} is a bad idea, it based on the division of the data in chunks with the same size of a block, by encrypting them with a K (key), the formula is: $C_i = enc(K, P_i)$. The problems of this solution are:
+\begin{itemize}
+  \item Swapping of two blocks of cipher goes undetected
+  \item Identical blocks generated identical cipher texts hence it is vulnerable to \textit{know-plaintext} attacks. (Word example)
+\end{itemize}
+These are the main reason to avoid the use of this solution for big data. The decryption is made by reversing the process. The figure \ref{fig:ecb} show the process.
+\begin{figure}[H]
+  \includegraphics[width=\linewidth]{images/ecb.png}
+  \caption{ECB}
+  \label{fig:ecb}
+\end{figure}
+The solution of \textbf{CBC} [figure \ref{fig:enc_cbc}] is more secure, by using an IV (Initialization Vector), it encrypt the block by XORing it with the previous block and with the key, this avoid the problem of the \textit{know-plainntext}, because same text in different position will generate different encrypted text. The IV is added for increasing the difficulties of decryption. The formula is the following:
+\begin{center}
+  $C_i = enc(K, P_i \oplus C_{i-1})$
+\end{center}
+The decryption require the Initialization Vector ($C_{0}$), the formula is the revert the process by the following formula:
+\begin{center}
+  $P_i = dec(K, C_i)\oplus C_{i-1}$
+\end{center}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{images/enc_cbc.png}
+  \caption{CBC Encryption}
+  \label{fig:enc_cbc}
+\end{figure}
+
+When the data is shorted than the block size, a \textbf{padding} (or aligning, filling) is required. It consist by adding some data at the end to completely fill the block. The are several techniques used for padding:
+\begin{itemize}
+  \item If the length is know: 0x00 bytes
+  \item Original DES: 1 bit followed by 0
+  \item One byte 128 (0x80) followed by null 0x00
+  \item Last byte value equal to length of padding
+\end{itemize}
+ The are also some techniques with explicit length for padding:
+ \begin{itemize}
+   \item (SSL/TLS) bytes with value L
+   \item (SSH2) random bytes
+   \item (IPsec/ESP) progressive numbers
+ \end{itemize}
+
+Padding is typically applied to large data, on the last fragment resulting from the division in blocks (ECB or CBC), for $|D| < |B|$ we prefer ad hoc techniques like CFB, OFB or CTR. Another important note is that, even if the plaintext is an exact multiple of the block, padding must be added anyhow to avoid errors in the interpretation of the last block.\\
+
+\textbf{CTS} (CipherText Stealing) permits to use block algorithms without padding:
+\begin{itemize}
+  \item Last (partial) block filled with bytes from the second-to-last block
+  \item These bytes are removed from the second-to-last block (which become partial)
+  \item After encryption, exchange the position of the last and second-to-last blocks.
+\end{itemize}
+ The figure shows better the solution algorithm:
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/cts.png}
+   \caption{CTS with ECB Encryption}
+   \label{fig:cts}
+\end{figure}
+This technique is useful when we cannot increase the size of the data after the encryption. The tail, store, after the encryption in the second-to-last block is encrypted 2 times and it requires 2 decryption.\\
+The \textbf{CRT} (Counter mode), really used, uses a block algorithm to cipher N bits at a time. It require:
+\begin{itemize}
+  \item \textbf{NONCE} = Number used ONCE
+  \item counter
+\end{itemize}
+The flow is showed in the following figure \ref{fig:crt}:
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/crt.png}
+   \caption{CRT flow}
+   \label{fig:crt}
+\end{figure}
+
+\paragraph{Symmetric Stream Algorithms} this kind of algorithms not require to separate datas in blocks. They operate over one bit/byte at the time. The ideal algorithms require a key which is as long as the message to protect, of course this is not possible. The real algorithms use pseudo-random key generators, synchronized between the sender and receiver, some examples are RC4 and SEAL. The idea is show in figure
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/stream.png}
+   \caption{Algorithms of type stream}
+   \label{fig:stream}
+\end{figure}
+A lot of challenges were started for stream ciphers, some algorithms are:
+\begin{itemize}
+  \item HC-128, Salsa, SOSEMANUK
+  \item Grain v1, MICKEY 2.0
+  \item Salsa20 and ChaCha20
+  \item Camellia
+  \item SEED and ARIA
+\end{itemize}
+
+\paragraph{Problem of symmetric cryptography} one of the main problem of all this technique is that one key is required for each couple / group of user in order to guarantee privacy within groups. This means that, for a complete private communication between N parties, \textbf{$N*(N-1)/2$} keys are necessary, these require key exchange algorithms and generate a problem for large groups.\\
+Another know problem is the \textbf{length of secret keys}, if:
+\begin{itemize}
+  \item The encryption algorithm was well designed
+  \item the keys - N bit length - are kept secret
+\end{itemize}
+... then the only possible attack is the brute force (exhaustive) attack which requires a number of trials equal to:
+\begin{center}
+  $T = 2^{Nbit}$
+\end{center}
+This means that and increase of the computational power, reduce the strenght of the keys, that require a growning number over years. For this reason a challenges (AES) was promoted to develop another algorithm, the winner was \textbf{Rijndael}.
+
+\subsection{Asymmetric Cryptography}
+
+
+
+
+
+
+
+
+
 
 
 
