@@ -413,22 +413,99 @@ Another know problem is the \textbf{length of secret keys}, if:
 This means that and increase of the computational power, reduce the strenght of the keys, that require a growning number over years. For this reason a challenges (AES) was promoted to develop another algorithm, the winner was \textbf{Rijndael}.
 
 \subsection{Asymmetric Cryptography}
+The Asymmetric Cryptography is based on 2 different keys generated in pairs, the two keys are different, one is called \textit{public} (\textbf{Kpub}) and the other \textit{private} (\textbf{Kpri}). If one key is used for encryption then the other one must be used for decryption, they have an inverse functionality. The computation load is high, due to this fact asymmetric encryption is used only for data streams and should not be used for data storage. The figure \ref{fig:asymmetric} show the process. The principals algorithms are:
+\begin{itemize}
+  \item Diffie-Hellman, RSA, DSA, El Gamal, etc...
+\end{itemize}
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/asymmetric.png}
+   \caption{Asymmetric Cryptography with pairs of keys}
+   \label{fig:asymmetric}
+\end{figure}
+Another possible application os this kind of cryptography is the \textbf{Digital Signature}, used to provide data authentication and integrity. Usually not all the data is encrypted but only its summary (\textbf{\textit{digest}}).\\
+Another important feature is the possibility to make secret message for a particular receiver given only its public key.\\
 
+\subsubsection{RSA}
+This algoritmh is based on a public module:
+\begin{center}
+  \textbf{$N=P * Q$}
+\end{center}
+known to anybody P and Q are \textbf{\textit{prime number, large and secret}}. Another value, $PHI=(P-1)(Q-1)$, along a public exponent E such that arbitrarily $1<E<PHI$ and it is relative prime with respect to PHI.\\
+From these element, a private exponent is computed:
+\begin{center}
+    $D=E^{-1}mod(PHI)$
+\end{center}
+from this last value the 2 keys can be computed:
+\begin{itemize}
+  \item public key = (N, E)
+  \item private key = (N, D)
+\end{itemize}
+\textbf{After that computation P and Q must be deleted, discarded, killed!!!} Otherwise the process can be inverted.\\
+An important note about RSA is that it can cipher/decipher only data whose value is less than the value of the module N, similar to a block algorithm but with a variable lenght. The final result is computed:
+\begin{itemize}
+  \item encrypt: $c = p^E mod(N)$
+  \item decrypt: $c = p^E mod(N)$
+\end{itemize}
+For matematichal reasons the roles of the 2 exponents, E and D, are interchangeable:
+\begin{center}
+  $(x^D)^E mod(N) == (x^E)^D mod(N)$
+\end{center}
+The advantage of using modular arithmetic is that the inverse of a reminder of a module could be "any number", there are infinite possibilities. An example in figure \ref{fig:example_rsa}:
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/example_rsa.png}
+   \caption{RSA an example}
+   \label{fig:example_rsa}
+\end{figure}
+During years some optimizations were developed, like the one based on the CRT (Chinese Remainder Theorem) that makes the procedure 4x times faster.
 
+\paragraph{Weaknesses} There are some know weaknesses:
+\begin{itemize}
+  \item Small encryption exponent
+  \item Same keys for encryption and signing
+  \item Acting as an oracle
+\end{itemize}
+Nowadays the lenght of the keys is important:
+\begin{itemize}
+  \item 512 bits keys $\sim$ Some weeks
+  \item 1024 bits keys $\sim$ Some Months
+  \item \textbf{2048 bits keys $\sim$ Several Years}
+\end{itemize}
 
+During Eurocrypt of 1999 a devices for decrypting RSA faster was annouced, it has never been presented, probably for interest reasons. For that, some governments, no longer want to use RSA solutions.\\
 
+\subsubsection{Key Distribution}
+The distribution is a fundamental step of asymmetric cryptography, the private key must kept SECRET, the ublic instead must be distributed as widely as possible. But how is possible to guarantee the binding between public key and person identity? There are 2 possible solutions:
+\begin{itemize}
+  \item Exchange of keys Out-Of-Band (e.g. keys party)
+  \item Distribution by specific data structure (public key certificate)
+\end{itemize}
 
+Confidentiality without shared secrets is often used to send the secret key chosen for a symmetric algorithm, looking at figure \ref{fig:no_share}.
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/no_share.png}
+   \caption{Confidentiality, no shared secret}
+   \label{fig:no_share}
+\end{figure}
 
+\subsubsection{Diffie-Hellman}
+Is the other well-know algorithm for asymmetric encryption. The idea behind the DH algorithm is good represented by figure \ref{fig:dh}.
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/dh.png}
+   \caption{Diffie-Hellman idea}
+   \label{fig:dh}
+\end{figure}
+It was the first developed public-key algorithm, is frequently used to agree on a sceret key (\textit{key agreement}), it was patented but is now expired. One advantage is that is sniffing resistant. It can be exploited by a MITM attack by manipulating the data like in figure \ref{fig:dh_mitm}.
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/dh_mitm.png}
+   \caption{Diffie-Hellman MITM}
+   \label{fig:dh_mitm}
+\end{figure}
 
-
-
-
-
-
-
-
-
-
-
+The complexity of DH is a discrete logarithm, in any case also RSA, required the usage of quantum computer to be exploited in a reasonable amount of time.
 
 \end{document}
