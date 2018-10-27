@@ -508,4 +508,33 @@ It was the first developed public-key algorithm, is frequently used to agree on 
 
 The complexity of DH is a discrete logarithm, in any case also RSA, required the usage of quantum computer to be exploited in a reasonable amount of time.
 
+\subsection{Elliptic Curve Cryptography}
+This solution instead of using modular arithmetic, the operations are executed on the surface of a 2D (elliptic) curve. The problem of discrete logarithm on such a curve is more \textbf{more complex} than modular and allows \textbf{shorter keys} (about 1/10). A lot of algorithms has been rewritten, \textbf{EC}DSA or \textbf{EC}DH.\\
+
+\paragraph{ECDH} the EC version of Diffie-Hellman is the same as before but with the math of an elliptic curve.\\
+\begin{itemize}
+  \item A and B select same elliptic curve and a point G of its
+  \item A chose a random value x and computes: $X = x G$
+  \item B chose a random value y and computes: $Y = y G$
+  \item A and B exchange (publish) X and Y
+  \item A computes $K = x Y$
+  \item B computes $K' = y X$
+\end{itemize}
+but the final result will be that:
+\begin{center}
+  $K = K' = x y G$
+\end{center}
+There are also other algorithms like ECDSA:
+\begin{itemize}
+  \item Message digest computed with normal hash function (SHA-256)
+  \item Signature = pair of scalars derived from the digest plus some operations on the curve
+\end{itemize}
+The ECIES instead:
+\begin{itemize}
+  \item Generates a symmetric encryption key (AES-128) with operations on the curve
+  \item Gives to the receiver the information (based on his public key) needed to recompute the encryption key
+\end{itemize}
+
+\subsection{Integrity}
+
 \end{document}
