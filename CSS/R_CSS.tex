@@ -633,28 +633,17 @@ Some possibilities are:
   \end{itemize}
   \item Encr-then-Auth (eg. IPsec)
   \begin{itemize}
-    \item enc(p, $K_{1}$) || mac(enc(p, $K_{1}$), $K_{2}$)
+    \item enc(p, $K_{1}$) $||$ mac(enc(p, $K_{1}$), $K_{2}$)
   \end{itemize}
 \end{itemize}
-Improper combination of secure algorithms may leed to an insecure result!
-
-\subsection{Authenticated Encryption}
-This tecnique allow one single operation for both privacy and authentication (and integrity):
+Improper combination of secure algorithms may leed to an insecure result!\\
+The AE tecniques allows to achieve both privacy and authentication (and integrity):
 \begin{itemize}
   \item One key
   \item One algorithm
   \item Better Speed
   \item Less error in combining
 \end{itemize}
-Is often used in applications, e.g. emails, networks, etc...)
-
-
-
-
-
-
-
-
-
+Are often used in applications, e.g. emails, networks, etc...
 
 \end{document}
