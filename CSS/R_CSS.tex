@@ -712,5 +712,61 @@ The main advantage of a digital signature over an handwritten one is that it can
 
 \subsubsection{Public Key Certificate}
 \textit{A data structure used to securely bind a public key to some attributes}, the idea is to bind a key to an identity, also other association are possible. The key will be digitally signed by the issuer: the \textbf{Certification Authority} for a limited amount of time. It can be revoked on request both by the user and the issuer.
+Some of the most common formats for pub key certificates are:
+\begin{itemize}
+  \item X.509: ISO + IETF
+  \item non X.509: PGP
+  \item PKCS\#6: RSA
+\end{itemize}
+\paragraph{X.509} is oe of the most used certificate format, the structure il composed of:
+\begin{itemize}
+  \item Version
+  \item Serial number
+  \item Signature Algorithm
+  \item Issuer
+  \item Validity
+  \item SUBJECT
+  \item SUBJECT PubKeyInfo
+  \item CA Digital Signature
+\end{itemize}
+An example in figure \ref{fig:x509}:
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/x509.png}
+   \caption{X.509 Certificate Example}
+   \label{fig:x509}
+\end{figure}
+The \textbf{PKI} (\textit{Public-Key Infrastructure}) is the Infrastructure, technical and administrative, put in place for the creation, distribution and revocation of public key certificates. Any certificate can be revoked before its expiration date:
+\begin{itemize}
+  \item By the owner
+  \item By the creator
+\end{itemize}
+when a signature is verified, the receiver must (and is a responbilitity) check that the certificate was valid at signature time. There are 2 type or revocation mechanisms:
+\begin{itemize}
+  \item CRL (Certificate Revocation List):
+  \begin{itemize}
+    \item List of revoked certificates
+    \item Signed by the CA or by delegated party
+  \end{itemize}
+  \item OCSP (On-line Certificate Status Protocol)
+  \begin{itemize}
+    \item Response containing information about certificates status
+    \item Signed by the server
+  \end{itemize}
+\end{itemize}
+How is made the verification of a signature? Look at figure \ref{fig:very_sign}.
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/very_sign.png}
+   \caption{Verification of signature/certificate}
+   \label{fig:very_sign}
+\end{figure}
+A hierarchical Infrastructure is necessary to correctly verify the authenticity. At a certain point a TOP-LEVEL CA is needed, like "god". An example is showed in figure \ref{fig:ca_god}:
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/ca_god.png}
+   \caption{Certification Hierarchy}
+   \label{fig:ca_god}
+\end{figure}
 
 \end{document}
