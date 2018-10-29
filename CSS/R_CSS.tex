@@ -680,25 +680,37 @@ Authentication can be also achieved by using \textbf{asymmetric} encryption. For
   \item (verifier V) X = dec(S\_Kpub, H)
   \item (verification) if(x == hash(M)) $\Rightarrow$ OK, else ALARM
 \end{itemize}
+those who knows the public key of the sender can compare the transmitted digest with the digest calculated on the received data. This is also know as \textbf{Digital Signature}! The figure show the behaviour.
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/ds.png}
+   \caption{Digital Signature}
+   \label{fig:ds}
+\end{figure}
+DS can be achieved with RSA-based algorithms, they must be:
+\begin{itemize}
+  \item Resistant to collisions (even just to avoid generating accidentally the same signature)
+  \item Difficult to invert
+\end{itemize}
 
+\subsubsection{Analysis}
+The A-I by means of a shared secret:
+\begin{itemize}
+  \item Useful only for the receiver
+  \item Cannot be used as a proof without disclosinng the secret key
+  \item Not useful for non repudiation
+\end{itemize}
+Instead, by means of asymmetric encryption:
+\begin{itemize}
+  \item Being slow it is applied to the digest only
+  \item Can be used as a formal proof
+  \item Can be used for non repudiation
+  \item = digital signature
+\end{itemize}
 
+The main advantage of a digital signature over an handwritten one is that it can guarantee both authentication and integrity because is tightly bound to the data.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+\subsubsection{Public Key Certificate}
+\textit{A data structure used to securely bind a public key to some attributes}, the idea is to bind a key to an identity, also other association are possible. The key will be digitally signed by the issuer: the \textbf{Certification Authority} for a limited amount of time. It can be revoked on request both by the user and the issuer.
 
 \end{document}
