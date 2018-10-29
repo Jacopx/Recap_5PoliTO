@@ -586,6 +586,8 @@ for this reasons digest function requires a good number of bits (birthday parado
 The are some code used to guarantee the integrity of the messages: \textbf{MIC} \textit{(Message Integrity Code)}, to guarantee the authentication: \textbf{MAC} \textit{(Message Authentication Code)} and to avoid the replay attacks \textbf{MID} \textit{(Message IDentifier)}.
 
 \subsection{Authentication}
+The authentication is the process or action of verifying the identity of a user or process, or showing something to be true, genuine, or valid.
+\subsubsection{Symmetric Cryptography}
 Authentication can be performed in different ways. One possibility is the \textbf{auth by Symmetric Encryption}. This solution send also an encrypted copy of data:
 \begin{itemize}
   \item (sender) M* = enc(K, M)
@@ -644,6 +646,59 @@ The AE tecniques allows to achieve both privacy and authentication (and integrit
   \item Better Speed
   \item Less error in combining
 \end{itemize}
-Are often used in applications, e.g. emails, networks, etc...
+Are often used in applications, e.g. emails, networks, etc...\\
+The RFC 5116 release define Interface and algorithms for authenticated encryption , for example the AEAD in figure \ref{fig:aead}.
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/aead.png}
+   \caption{Authenticated Encryption with Asociated Data (AEAD)}
+   \label{fig:aead}
+\end{figure}
+The idea of AEAD is that comparing the two header, the one ciphered and the plain one, will guarantee the integrity.\\
+The \textbf{IGE} (\textit{Infinite Garble Extension}) is a modde of application and is not too much used because is too simple to be exploited, the flow is in figure \ref{fig:ige}.
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/ige.png}
+   \caption{IGE (Infinite Garble Extension)}
+   \label{fig:ige}
+\end{figure}
+The AE standard are:
+\begin{itemize}
+  \item OCB 2.0
+  \item AESKW (AE Key Wrap)
+  \item CCM (CTR mode with CBC-MAC)
+  \item EAX
+  \item Encrypt-then-MAC
+  \item GCM
+\end{itemize}
+
+\subsubsection{Asymmetric Cryptography}
+Authentication can be also achieved by using \textbf{asymmetric} encryption. For example the \textbf{auth by digest and asymmetric crypto} is one of the first implementations:
+\begin{itemize}
+  \item (signer S) H = enc(S\_Kpri, hash(M))
+  \item (transmission) M $||$ H
+  \item (verifier V) X = dec(S\_Kpub, H)
+  \item (verification) if(x == hash(M)) $\Rightarrow$ OK, else ALARM
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \end{document}
