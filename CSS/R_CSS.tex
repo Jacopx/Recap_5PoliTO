@@ -767,6 +767,86 @@ A hierarchical Infrastructure is necessary to correctly verify the authenticity.
    \includegraphics[width=\linewidth]{images/ca_god.png}
    \caption{Certification Hierarchy}
    \label{fig:ca_god}
+\end{figure} % Ending basic_en.pdf
+
+\newpage % Starting netsec_en.pdf
+\section{Security of IP networks}
+\subsection{Introduction}
+Nowadays networks are become a fundamental basis of out life. Every devices is now connected or link the internet in some ways. The lead to a lot of security problem. Computers are faceing these issue from years, but refrigerators not. Is important to ensure a reliable and secure connections between the appliance and the internet world.
+
+\subsection{Authentication}
+The modern way to allow network access is to using an authentication protocol to an AAA server.
+The most used protocol is the auth via PPP channels. \textbf{PPP} is a protocol to encapsulate network packets (LV3, e.g. IP) and charry them over a point-to-point link. I could be of different type:
+\begin{itemize}
+  \item Physical (RTC, ISDN)
+  \item Virtual L2 (xDSL with PPPoE)
+  \item Vistual L3 (L2TP over UDP/IP)
+\end{itemize}
+Activated in 3 sequential steps:
+\begin{enumerate}
+  \item LCP (Link Control Protocol)
+  \item Authentication (optionall PAP, CHAP or EAP)
+  \item L3 Encapsulation (IPCP, IP Control Protocol)
+\end{enumerate}
+
+The three possible protocols for authentications are:
+\begin{itemize}
+  \item \textbf{PAP} - Not more good!
+  \begin{itemize}
+    \item Password Auth Protocol
+    \item Pwd send in clear
+  \end{itemize}
+  \item \textbf{CHAP}
+  \begin{itemize}
+    \item Challenge Handshake Auth Protocol
+    \item Symmetric Challenge (based on user password)
+  \end{itemize}
+  \item \textbf{EAP} - Framework (USED)
+  \begin{itemize}
+    \item Extensible Auth Protocol
+    \item External Techniques
+  \end{itemize}
+\end{itemize}
+The EAP is a flexible L2 authentication framework, it use come predefined mechanis such as: MD5-challenge (similar to CHAP), OTP or Generic Token Card. Also other mechanisms may be added by the RFC standard, like the RADIUS support.\\
+The authentication data are transported via its own encapsulation protocol (because L3 packets are not yet available), the main features are:
+\begin{itemize}
+  \item Indipendent of IP (Supports any link layers PPP, 802)
+  \item Explicit ACK/NAK (no windowing)
+  \begin{itemize}
+    \item Assumes no reordering (PPP guarantees ordering, UDP or raw IP do not)
+  \end{itemize}
+  \item Rentransmission (3-5 max)
+  \item No fragmentation
+\end{itemize}
+The link created by EAP is not assumed to be physically secure, EAP auth methods must provide security on their own. Some methods are:
+\begin{itemize}
+  \item EAP-TLS
+  \item EAP-MD5
+  \item EAP-TTLS
+  \item EAP-SRP
+  \item GSS\_API (ticket for Kerberos realm)
+  \item AKA-SIM (Used for mobile SIM auth)
+\end{itemize}
+In figure \ref{fig:eap} the schema of EAP architecure:
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/eap.png}
+   \caption{EAP Architecture}
+   \label{fig:eap}
 \end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \end{document}
