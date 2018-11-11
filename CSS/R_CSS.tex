@@ -331,7 +331,7 @@ The solution of \textbf{CBC} [figure \ref{fig:enc_cbc}] is more secure, by using
 \end{center}
 The decryption require the Initialization Vector ($C_{0}$), the formula is the revert the process by the following formula:
 \begin{center}
-  $P_i = dec(K, C_i)\oplus C_{i-1}$
+  $P_i = dec(K, C_i) \oplus C_{i-1}$
 \end{center}
 
 \begin{figure}[H]
@@ -834,10 +834,48 @@ In figure \ref{fig:eap} the schema of EAP architecure:
    \caption{EAP Architecture}
    \label{fig:eap}
 \end{figure}
+The request will be sended to a \textbf{NAS} (Network Access Server), the feature required by the NAS manufacturer are:
+\begin{itemize}
+  \item Authentication: \textit{Entity's identity is authenticated based on credentials}
+  \item Authorization: \textit{Determining whether an entity is authorized to perform a given activity or access to resources}
+  \item Accounting: \textit{Tracking network resource usage for audit support, capacity analysis or cost billing}
+\end{itemize}
+the Autentication Server performs these three functions talking with one or more NAS via one or more protocols.
 
+\subsubsection{Authentication Protocols}
+The most known are:
+\begin{itemize}
+  \item \textbf{RADIUS}: de-facto standard, proxy towards other AS.
+  \item \textbf{DIAMETER}: evolution of RADIUS, roaming between different ISP, security.
+  \item \textbf{TACACS+}: Better than RADIUS but proprietary solution of Cisco.
+\end{itemize}
 
-
-
+\paragraph{RADIUS} \textit{Remote Authentication Dial-In User Service} was developed in 1991 by Livingston technologies. It supports authentication, authorization and accounting to control network access, both on virtual and physical ports. It allow a centralized administration and accounting service, with a client-server schema between NAS and AS. It use port 1812 UDP for authentication and 1813 UDP for accounting.\\
+One of the main feature is the ability to act like a proxy for other RADIUS db, an example is eudoram, that is the greatest RADIUS server in the world, and it's used by all the European University. In figure an example of work:
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/radius.png}
+   \caption{RADIUS example}
+   \label{fig:radius}
+\end{figure}
+Some security functions over attacks are implemented:
+\begin{itemize}
+  \item Sniffing NAS request
+  \item Fake AS response
+  \item Chaging AS response
+  \item PWD enumeration
+\end{itemize}
+Packet integrity and authentication via keyed MD5:
+\begin{center}
+  $pwd \oplus MD5(key+authenticator)$
+\end{center}
+The user authentication via PAP, CHAP, token-card or EAP. The attributes are in TLV form, easily extensible without modification installed base. The types of the packet can be ACCESS-:
+\begin{itemize}
+  \item REQUEST: Contains access credentials
+  \item REJECT: Access is denied
+  \item CHALLENGE: Request additional info from the user
+  \item ACCEPT: Access granted + network parameters given
+\end{itemize}
 
 
 
