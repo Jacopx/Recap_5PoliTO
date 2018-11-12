@@ -901,4 +901,49 @@ the user name is the one used in the PPP authentication phase. The figure \ref{f
 
 \paragraph{DIAMETER} was developed like the RADIUS evolution (twice the radius), it has a special emphasis on roaming between ISPs. It guarantee protection via IPsec or TLS, both compulsory for the server side.
 
+\paragraph{IEEE 802.1x} is a port-based Network Access Control: L2 architecture, usefull in a wired connection to block access, absolutely needed in wireless networks. The first implementations was born for Windows and Cisco wireless access-point. Is an authentication and key-management framework, it can derive keys for management, authentication, integrity and secrecy of packets, using standard algorithms for key derivation like TLS, SRP, etc... It can also provide other security services.\\
+The main advantages for 802.1x is that it exploits the application level for the actual implementation of the security:
+\begin{itemize}
+  \item Direct dialogue between supplicant and AS (NIC-NAS "pass-trough device")
+  \item No cange needed on NIC and NAS to implement new mechanisms
+  \item Perfect integration in AAA
+\end{itemize}
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/802-1x.png}
+   \caption{802.1x Flow}
+   \label{fig:802-1x}
+\end{figure}
+
+Which is the best level for apply security? The upper we go in the stack, the more specific are the security functions (e.g. Identify user, commands, data) and independent from the underlying network... But we leave more room for DoS attacks. The lower level we go in the stack, the more quickly we can expel the intruders, but we have also fewer data to make the decision (e.g. MAC, IP). The dest way is to put a little bit of security in every step of our stack. At low level, for faster expulsion, high level for more precise expulsion.
+
+\subsection{DHCP}
+DHCP is non-authentication protocol (really bad, trivial activation of shadow server). The main kind of attacks are:
+\begin{itemize}
+  \item DoS: Provides wrong configurations.
+  \item MITM: Good configuration but /30 subnet, attacker like gateaway. With NAT also reply intercepted.
+\end{itemize}
+There are some solution to increase security but are not so much used, like DHCP snooping or HMAC-MD5 to authenticate messages (too complicated, required shared secret). In case a RADIUS server is available, is better to use it to gain network configurations.
+
+\subsection{Security LV3 - VPN}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \end{document}
