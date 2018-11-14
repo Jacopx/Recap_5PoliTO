@@ -926,24 +926,61 @@ DHCP is non-authentication protocol (really bad, trivial activation of shadow se
 There are some solution to increase security but are not so much used, like DHCP snooping or HMAC-MD5 to authenticate messages (too complicated, required shared secret). In case a RADIUS server is available, is better to use it to gain network configurations.
 
 \subsection{Security LV3 - VPN}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+At LV3 security can be achived by two main solutions, securing all the networks, or by securing some paths.\\
+What is a \textbf{VPN}? \textit{Virtual Private Network} is a technique hardware and/or software to create a private network while using a shared (or anyway untrusted) channels and transmission devices.
+There are several techniques to create a VPN:
+\begin{itemize}
+  \item Private Addressing
+  \item Protected Routing (IP Tunnel)
+  \item Cryptography protection of the network packets (secure IP Tunnel)
+\end{itemize}
+The first, is not too much secure, the network to be part of the VPN use non-public addresses so that they are unreachable from other networks. This solution can be easily defeated if somebody discovers the addresses, it can sniff the packets during transmission and it has access to the communication devices.\\
+The other solution, via Tunnel, use the router to encapsulate whole L3 packets as a payload inside another packet: IP-IP, IP-MPLS, other. THe router must perform access control to the VPN by ACL (Access Control List). This protection can be defeated by anybody that manages a router or can sniff packets during transmission. In figure \ref{fig:vpn_tunnel} a schema of the process:
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/vpn_tunnel.png}
+   \caption{VPN via IP Tunnel}
+   \label{fig:vpn_tunnel}
+\end{figure}
+If packet has size equal to the MTU, then encapsulation will only possible with fragmentation, this means performance loss, that can't be grater than 50\%.\\
+The best solution is the VPN via secure IP tunnel, before the encapsulation, the packets are protected with:
+\begin{itemize}
+  \item MAC (integrity + authentication)
+  \item Encryption (confidentiality)
+  \item Numbering (to avoid replay)
+\end{itemize}
+If the cryptographic algorithms are strong, then the only possible attack is to stop the communications. This solution is a.k.a as S-VPN (Secure VPN), figure \ref{fig:svpn}.
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/svpn.png}
+   \caption{Secure VPN schema}
+   \label{fig:svpn}
+\end{figure}
+One of the most used VPN solution is \textbf{IPsec}, defined by IETF, is an architecture for L3 security in IPv4/IPv6, to create S-VPN over untrusted networks, or to create end-to-end secure packet flows. It defines to specific packet types:
+\begin{itemize}
+  \item \textbf{AH} (\textit{Authentication Header}): Integrity, Authentication, no replay
+  \item \textbf{ESP} (\textit{Encapsulating Security Payload}): Confidentiality
+\end{itemize}
+It make use of IKE for keys exchange.\\
+The \textbf{Security Association} (SA) is an unidirectional logic connection between two IPsec systems, two SA are needed to get complete protection of a bidirectional packet flows. Each SA is indipendent and it is associated with different security services, they can be also the same.\\
+IPsec make use of some sort of DB for managing connections:
+\begin{itemize}
+  \item SAD (SA Database): Not a real DB, is the list of active SA and their characteristics
+  \item SPD (Security Policy Database): List of security policy to apply to the different packet flows, configured a-priori or by an automatic system.
+\end{itemize}
+The \textbf{transport mode} of IPsec is used for end-to-end security, that is used by hosts, not gateways. The advantage is that is computationally light, the cons is that there isn't protection for the header variable fields. The \textbf{tunnel mode} instead, is used to create a VPN by gateways, the advantages are the protection of header variable, the problem is that is computationally heavy.\\
+The AH, that ensure data integrity and sender authentication, the first version was supporting keyed-MD5 and optionally of keyed-SHA-1, now in ensure also (partial) protection from replay attack and it use HMAC-MD5-96 and HMAC-SHA-1-96. Figure \ref{fig:ipssec_flow} show the flow of the architecture.
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/ipssec_flow.png}
+   \caption{IPsec flows}
+   \label{fig:ipssec_flow}
+\end{figure}
+The normalization of AH it reset the TTL and the Hop Limit Field. If the packet contains a ROuting Header, then:
+\begin{itemize}
+  \item Set the destination field to the address of the final destination
+  \item Set the content of the routing header to the value that it will have at destination
+  \item Set the Address Index field at the value that it will have at destination
+\end{itemize}
+% Pag. 29 @ netsec
 \end{document}
