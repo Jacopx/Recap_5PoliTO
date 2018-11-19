@@ -956,6 +956,8 @@ If the cryptographic algorithms are strong, then the only possible attack is to 
    \caption{Secure VPN schema}
    \label{fig:svpn}
 \end{figure}
+
+\subsubsection{IPsec}
 One of the most used VPN solution is \textbf{IPsec}, defined by IETF, is an architecture for L3 security in IPv4/IPv6, to create S-VPN over untrusted networks, or to create end-to-end secure packet flows. It defines to specific packet types:
 \begin{itemize}
   \item \textbf{AH} (\textit{Authentication Header}): Integrity, Authentication, no replay
@@ -982,5 +984,72 @@ The normalization of AH it reset the TTL and the Hop Limit Field. If the packet 
   \item Set the content of the routing header to the value that it will have at destination
   \item Set the Address Index field at the value that it will have at destination
 \end{itemize}
-% Pag. 29 @ netsec
+
+\paragraph{ESP} (\textit{Encapsulating Security Payload}) is a solution to encapsulating IP packets. With the latest version is possible to provide confidentiality and authentication. Using it in trasport mode have some conseguence:
+\begin{itemize}
+  \item {+} Payload is hidden (including info needed for QoS, filtering or intrusion detection)
+  \item {-} The header remains in clear
+\end{itemize}
+Using the tunnel mode something is changing:
+\begin{itemize}
+  \item {+} Hides both payload and (original) header
+  \item {-} Larger packet size
+\end{itemize}
+The last implementation use the ESP-DES-CBC format.
+\begin{figure}[h!]
+  \centering
+  \begin{minipage}{.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{images/esp-transport.png}
+    \caption{ESP: transport mode}
+    \label{fig:esp-transport}
+  \end{minipage}\hfill
+  \begin{minipage}{.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{images/esp-tunnel.png}
+    \caption{ESP: tunnel mode}
+    \label{fig:esp-tunnel}
+  \end{minipage}\hfill
+\end{figure}
+
+The IPsec implementation details are:
+\begin{itemize}
+  \item VPN-A: ESP/3DES-CBC/HMAC-SHA1
+  \item VPN-B: ESP/AES-128-CBC/AES-XCBC-MAC-96
+\end{itemize}
+The NULL algorithms for ESP:
+\begin{itemize}
+  \item For authentication or privacy (not simultaneosly)
+  \item Protection vs. performcae trade-off
+\end{itemize}
+Sequence Number:
+\begin{itemize}
+  \item Partial protection from replay
+  \item Minimum window of 32 packets (64 suggested)
+\end{itemize}
+The real \textbf{replay protection} follow a sequence of actions:
+\begin{enumerate}
+  \item After SA is established, sender initilizes sequence number to 0
+  \item For each packet the Seq.Numb is incrementend
+  \item At the reach of the maximum sequence number, the new SA should be negotatiated
+\end{enumerate}
+
+The IPsec v3 use: AH is optional and ESP is mandatory, support for single multicast source, uses extended sequence number (64 bits), support AEAD and add some clarifications about SA and SPI (for faster lookup).
+Multiple combinations of VPN can be exploited together in order to use of the different benefits between the different modes:
+\begin{itemize}
+  \item trasport-mode between to hosts
+  \item tunnel-mode between to gateways
+  \item 1st and 2nd together
+  \item Host and gateways with tunnel mode
+\end{itemize}
+
+\paragraph{Key management} is one of the most important component of IPsec, is in charge of provides, to both parties, the symmetric keys used for packet authentication and/or encryption. The distribution can be achived in two ways:
+\begin{itemize}
+  \item OOB
+  \item Automatic in-band
+\end{itemize}
+The protocol used by IPsec is the \textbf{ISAKMP} (\textit{Internet Security Association and Key Management Protocol}) it negotiate, set-up, modify and delete SA, the exchange is not fixed, the one used is OAKLEY.
+The whole phase is managed by \textbf{IKE}, \textit{Internet Key Exchange}, it create SA to protect the ISAKMP exchange, this created SA is used to protect the negotiation of the SA needed by IPsec traffic, the same SA can be used several times to negotiate other IPsec SA.
+% STOP: netsec @ Pag.39
+
 \end{document}
