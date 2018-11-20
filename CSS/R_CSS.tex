@@ -1049,7 +1049,65 @@ Multiple combinations of VPN can be exploited together in order to use of the di
   \item Automatic in-band
 \end{itemize}
 The protocol used by IPsec is the \textbf{ISAKMP} (\textit{Internet Security Association and Key Management Protocol}) it negotiate, set-up, modify and delete SA, the exchange is not fixed, the one used is OAKLEY.
-The whole phase is managed by \textbf{IKE}, \textit{Internet Key Exchange}, it create SA to protect the ISAKMP exchange, this created SA is used to protect the negotiation of the SA needed by IPsec traffic, the same SA can be used several times to negotiate other IPsec SA.
-% STOP: netsec @ Pag.39
+The whole phase is managed by \textbf{IKE}, \textit{Internet Key Exchange}, it create SA to protect the ISAKMP exchange, this created SA is used to protect the negotiation of the SA needed by IPsec traffic, the same SA can be used several times to negotiate other IPsec SA.\\
+The IKE flow is divided in two phases:
+\begin{enumerate}
+  \item Negotiation of a bidirectional ISAKMP SA: \textit{main or aggressive mode}
+  \item Negotiation of the IPsec SA: \textit{quick mode}
+\end{enumerate}
+The different modes of operation are:
+\begin{itemize}
+  \item Main mode: 6 msg, protect parties identities
+  \item Aggressive mode: 3 msg
+  \item Quick mode: 3 msg, negotiation only of the IPsec SA
+  \item (new) Group mode: 2 msg, already used for update SA parameters
+\end{itemize}
+The IKE process allows different authentication methods:
+\begin{itemize}
+  \item Digital Signature: non-repudiation of the IKE Negotiation
+  \item Public Key Encryption: identity protection in the aggressive mode
+  \item Revised Public Key Encryption: less expensive, only 2 public-key operations
+  \item Pre-shared Key: party ID may only be its IP address
+\end{itemize}
+System requirement for IPsec appliance:
+\begin{itemize}
+  \item Router: Powerful CPU or Crypto AES-NI accelerator
+  \item Firewall: Powerful CPU
+  \item VPN Concentrator: (special-pourpose appliance terminator of IPsec tunnel)
+\end{itemize}
+Of course the IPsec tunnel encapsulation require a reduce of the throughput due to 2 main reasons:
+\begin{itemize}
+  \item Larger Packet Size: AH (+24 bytes), ESP-DES-CBC (>= 32 bytes)
+  \item Larger number of packets: SA activation and update
+\end{itemize}
+Usually the decrease is not too much important, with a proper hardware, there are some exception like in Point-To-Point link that used L2 compression that now becomes useless or counterproductive when applied to ESP packets.
+
+\subsubsection{IP insecurity}
+The intrinsic insecurity of IP protocol drive insecurity to all the services transported by it, the main problem are the not authentication of addresses and the unprotected packets (integrity, authm confidentiality and replay).\\
+\paragraph{ICMP} is the \textit{Internet Control and Management Protocol} the is vital for the network management, the main problem is that is used for many attacks because it has no authentication. Some example of attacks are:
+\begin{itemize}
+  \item Smurfing: Using broadcast addresses to lot of replay to a single host
+  \item Fraggle: Similar to smurfing but with UDP packets
+  \item ARP Poisoning
+  \item TCP SYN Flooding: Multiple open connection TCP
+\end{itemize}
+
+\subsubsection{DNS}
+The goal of the DNS is to translate from name to IP and from IP to name. Is a again a vital service, the query are performed over UDP@53, is not secured at all.\\
+One of the main attacks performed exploiting DNS leak is the shadows server by sniffing to intercept the queries and spoofing to generate a fake answers. Other possible attacks are the DNS cache poisoning.\\
+For a lot of reasons the \textbf{DNSsec} is needed to avoid attacks like the Kaminsky one (figure \ref{fig:kaminsky}), is now available from some public like Cloudflare DNS.
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/kaminsky.png}
+   \caption{Kaminsky Attack}
+   \label{fig:kaminsky}
+\end{figure}
+This new solution peform: Digital Signature of DNS records. It must face over some issues like not signed DNS response, no root CA, bigger record size and scarse experimental results.
+
+\paragraph{Routing security} another low critical appliance are the router, normally they have low security management for accessing like telnet or SNMP, there is also low security in the exchange of routing tables.
+% Ending NETWORK Security
+
+\section{X.509}
+
 
 \end{document}
