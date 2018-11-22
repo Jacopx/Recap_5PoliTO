@@ -1108,6 +1108,18 @@ This new solution peform: Digital Signature of DNS records. It must face over so
 % Ending NETWORK Security
 
 \section{X.509}
+The third version of X.509 was developed in June 1996, the goal is to groups together in a unique document the modifications required to extend the definition of certificate and CRL. Two types of fundamental extensions are available:
+\begin{itemize}
+  \item \textbf{Public}: That is defined by the standard and consequently made public to anybody
+  \item \textbf{Private}: Unique for a centain user community
+\end{itemize}
+X.509 was useless before the idea of the extensions. The extensions can be defined critical and non critical:
+\begin{itemize}
+  \item In the verification process the certificates that contain an unrecognized critical extension MUST be rejected
+  \item A non critical extension MAY be ignored if it is unrecognized
+\end{itemize}
+The different processing is entirely the responsibility of the party that performs the verification: the \textbf{Relying Party (RP)}.
+
 
 
 \end{document}
