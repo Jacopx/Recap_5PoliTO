@@ -1118,7 +1118,80 @@ X.509 was useless before the idea of the extensions. The extensions can be defin
   \item In the verification process the certificates that contain an unrecognized critical extension MUST be rejected
   \item A non critical extension MAY be ignored if it is unrecognized
 \end{itemize}
-The different processing is entirely the responsibility of the party that performs the verification: the \textbf{Relying Party (RP)}.
+The different processing is entirely the responsibility of the party that performs the verification: the \textbf{Relying Party (RP)}.\\
+The public extension classes defined by the v3 of X.509 include:
+\begin{itemize}
+  \item Key and Policy information: Author, subject, key usage, etc...
+  \item Certificate subject and certificate issuer attributes
+  \item Certificate path constraints: Basic, name and policy
+  \item CRL distribution points
+\end{itemize}
+The \textbf{key usage} identifies the application domain for which the public key can be used (nonRepudiation, keyEnchipherment, dataEncipherment, keyAgreement, digital signature, cRLSign). It can be critical or not critical, if critical it can be used only for the scopes for which the corresponding option is defined.\\
+The \textbf{Certificate Subject and Certificate Issuer Attributes} can have:
+\begin{itemize}
+  \item Subject Alternative Name (SAN): Different formalisms to identify the owner (Mail, IP, URL)
+  \item Issuer Alternative Name
+  \item Subject Directory Attributes
+\end{itemize}
+The Basic constraints is used to indicates if the subject of the certificate can act as a CA. If true, also the depth of the certification tree can be defined. It can be critical or non critical. The name constraint field is used only by CA, it define the space of names that can be ceritified by the CA and the possibility of subTree. The last possibilities, the CRL distribution point, identifies the distribution point of the CRL to be used in validating a certificate, it can be a directory entry, mail or URL and it can be critical or not.\\
+The \textbf{Private Extensions} that is extensions common to a certain user community.
+
+\subsection{CRL}
+Is the certificate revocation list, they are issued periodically and maintained by the certificate issuers. Of course they are digitally signed:
+\begin{itemize}
+  \item By the CA that issued the certificates
+  \item By a revocation authority delegated
+\end{itemize}
+A set of extensions have be developed for the CRLv2, the \textbf{crlEntryExtensions} and the \textbf{crlExtensions}. The timeline of a revocation is shown in the following figure:
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/revoc_timeline.png}
+   \caption{Revocation Timeline}
+   \label{fig:revoc_timeline}
+\end{figure}
+The timeline is divided in three parts:
+\begin{itemize}
+  \item RED: Still valid certificate (Revocation requested)
+  \item YELLOW: Cert still valid for who not already informed (dangerous)
+  \item GREEN: Safe zone
+\end{itemize}
+When a key is issued is also important to verify the revocation time policy, they can varying from minutes to days. A solution to improve the efficency of this protocol is to use OCSP.\\
+The \textbf{OCSP} \textit{Online Certificate Status Protocol} is a standard to verify online if a certificate is valid: Good, revoked or unknown. The response is signed by the server. The OCSP server certificate cannot be verified with OCSP itself.\\
+The response of the OCSP server can be precomputed, this reduce the load over the server, but makes possible replay attacks. Is also possible to obtain information not from CRL. The responder can be of 2 types:
+\begin{itemize}
+  \item \textbf{Trusted}: Response signed with a pair key;cert independent of the CA for which it is responding. (Company responder or TTP paid by users)
+  \item \textbf{Delegated}: The OCSP server signs the responses with a pair which is different based on the CA for which it is responding. (Paid by CA)
+\end{itemize}
+
+\subsection{Time stamping}
+Is a really important feature. Is a proof of creation of data before a ceratin point in time, the requested is managed by a Time-Stamping Authority. The flow is the following:
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/tpf.png}
+   \caption{Time-Stamping procedure}
+   \label{fig:tpf}
+\end{figure}
+
+\subsection{PSE: Personal Security Environment}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
