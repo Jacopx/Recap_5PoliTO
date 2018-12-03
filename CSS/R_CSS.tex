@@ -1173,26 +1173,52 @@ Is a really important feature. Is a proof of creation of data before a ceratin p
 \end{figure}
 
 \subsection{PSE: Personal Security Environment}
+There are several types of solution in order to keep secure our data, from private key to certificates of the trusted root CAs. The PSE can be:
+\begin{itemize}
+  \item \textbf{Software}: Encrypted file of private key
+  \item \textbf{Hardware}: Passive (Similar to SW) or Active (Protected keys + Crypto Operations)
+\end{itemize}
+An example of HPSE are the cryptographic smart-card, they are chip cards with memory and/or autonomous cryptographic capacity (DES or RSA and ECDSA). They are based on a small memory (EEPROM): 4-32 KByte. The basic idea is to not give the key to sign, but to get what must be signed.
+The \textbf{HSM} (\textit{Hardware Security Module}) is a cryptographic accelerator for servers, securely store private key and have autonomous encryption capabilities.\\
 
+\subsection{CMS}
+The \textit{(Cryptographic Message Syntax)} is the evolution of the PKCS\#7 that is a RSA standard for secure envelope. It allows data authentication, integrity and/or privacy, with both symmetric and asymmetric algorithms. It supports mutiple signatures (hierarchical or parallel) on a signle object and can include the certs to verify the signature. The CMS can use several algorithms:
+\begin{itemize}
+  \item Digest: MD5, SHA-1
+  \item Signature: RSA, DSA
+  \item Key management:
+  \begin{itemize}
+    \item Agreement: DH
+    \item Transport: RSA
+    \item Symmetric Wrapping: 3DES, RC2
+    \item Derivation: PBKDF2
+  \end{itemize}
+  \item Content Encryption: 3DES-CBC, RC2-CBC
+  \item MAC: HMAC-SHA1
+\end{itemize}
+The structure of CMS is made of a contentInfo that contains the pieces: contentType and the content.
+The contentType can be:
+\begin{itemize}
+  \item Data
+  \item signedData (\ref{fig:signedData})
+  \item envelopedData (\ref{fig:envelopedData})
+  \item authenticatedData
+  \item digestedData
+  \item encryptedData
+\end{itemize}
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/signedData.png}
+   \caption{Signed Data}
+   \label{fig:signedData}
+\end{figure}
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/envelopedData.png}
+   \caption{Enveloped Data}
+   \label{fig:envelopedData}
+\end{figure}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+% \subsection{PKCS\#12}
 
 \end{document}
