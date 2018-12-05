@@ -1200,8 +1200,8 @@ The structure of CMS is made of a contentInfo that contains the pieces: contentT
 The contentType can be:
 \begin{itemize}
   \item Data
-  \item signedData (\ref{fig:signedData})
-  \item envelopedData (\ref{fig:envelopedData})
+  \item signedData (fig.\ref{fig:signedData})
+  \item envelopedData (fig.\ref{fig:envelopedData})
   \item authenticatedData
   \item digestedData
   \item encryptedData
@@ -1219,6 +1219,49 @@ The contentType can be:
    \label{fig:envelopedData}
 \end{figure}
 
-% \subsection{PKCS\#12}
+\subsection{PKCS\#12}
+Is a standard defined by RFC for the transport of (personal) cryptographic material among applications or different system. Is used to transport a private key and one or more certificates or the digital identity of a user. Is widely used.
+
+\subsection{Multiple Signature}
+There two possible solution for multiply signing documents:
+\begin{itemize}
+  \item Parallel/Indipendent: Each different user sign the document indipendently, 3 digest of result. (fig. \ref{fig:parallel})
+  \item Sequential/Hierarchical: Each user sign the document plus the digest of the previous signer. (fig. \ref{fig:sequential})
+\end{itemize}
+\begin{figure}[h!]
+  \centering
+  \begin{minipage}{.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{images/parallel.png}
+    \caption{Parallel/Indipendent}
+    \label{fig:parallel}
+  \end{minipage}\hfill
+  \begin{minipage}{.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{images/sequential.png}
+    \caption{Sequential/Hierarchical}
+    \label{fig:sequential}
+  \end{minipage}\hfill
+\end{figure}
+
+\subsection{EU Eletronic Signature (ES)}
+Data in electronic form which are attached to or logically associated with other eletronic data and which serve as a method of authentication. Also a scanned signature is an Electronic Signature. The goal of this solution is to provide an international standard, the difference is that is a general idea and not a technical document.\\
+The \textbf{AES} (\textit{Advanced Eletronic Signature}) is a specificantion of this document. The main rules are:
+\begin{itemize}
+  \item Uniquely linked to the signatory
+  \item Capable of identifying the signatory
+  \item Created using means that the signatory can maintain under his sole control
+  \item Linked to the data to which it relates in such a manner that any subsequent change of the data is detectable
+\end{itemize}
+The \textbf{QC} (\textit{Qualified Certificate}) is a PKC cerityfing the identity of a person and containing:
+\begin{itemize}
+  \item An indication that it was issued as a WC
+  \item The name of the signatory or a pseudonym, which shall be identified as such
+  \item Provision for a specific attribute of the signatory to included id relevant, depending on the purpose for which the certificate is intended
+  \item Limitation on the scope of the certificate, if any
+  \item Limits on the value of transactions, if any
+\end{itemize}
+The \textbf{QES} (\textit{Qualified Electronic Signature}) is an AES based on a QC, and created by a secure-signature-creation device. It satisfying the legal requirements of a signature in relation to data in eletronic form in the same manner as a handwritten signature satisfies those requirements in relation to paper-based data. Is also admissible as evidence in legal proceedings.\\
+An important problem to be noticed is the "macro" problem, in general idea e-signing an e-document containing a macro is a bad idea, the verification of the data is become impossible. WYSIWYS (\textit{What You See Is What You Sign}) is highly desiderable, is a prblem of the application developers.
 
 \end{document}
