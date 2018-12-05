@@ -1264,4 +1264,33 @@ The \textbf{QC} (\textit{Qualified Certificate}) is a PKC cerityfing the identit
 The \textbf{QES} (\textit{Qualified Electronic Signature}) is an AES based on a QC, and created by a secure-signature-creation device. It satisfying the legal requirements of a signature in relation to data in eletronic form in the same manner as a handwritten signature satisfies those requirements in relation to paper-based data. Is also admissible as evidence in legal proceedings.\\
 An important problem to be noticed is the "macro" problem, in general idea e-signing an e-document containing a macro is a bad idea, the verification of the data is become impossible. WYSIWYS (\textit{What You See Is What You Sign}) is highly desiderable, is a prblem of the application developers.
 
+\section{Firewall and IDS/IPS}
+\subsection{Firewall}
+A firewall is a wall to protect against fire propagation, it controlls connection between networks at different security levels (boundary protection).
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/firewall.png}
+   \caption{Firewall}
+   \label{fig:firewall}
+\end{figure}
+There are two types of firewall:
+\begin{itemize}
+  \item \textbf{Ingress}: Incoming connections are managed, used to select the public services offered
+  \item \textbf{Egress}: Used for check the activity of personell (Less common)
+\end{itemize}
+Firewall is something that can't be buyed, is designed. Of course an increased of functionality decrease se security and viceversa. There are three defined commandments for firewalls:
+\begin{itemize}
+  \item Thw FW must be the only contact point of the internal network with the external one
+  \item Only authorized traffic can traverse the FW
+  \item The FW must be a highly secure system itself
+\end{itemize}
+Two authorization policies can be exploited, one is the \textbf{whitelisting} where \textit{"All that is not explictly permitted, is forbidden"} that guarantee more security with an increase of difficulties to manage. The other solution, \textbf{blacklisting}, is \textit{"All that is not explictly forbidden, is permitted"} this is less secure because everything is open, but is more easy to be managed.\\
+The basic component of a FW are:
+\begin{itemize}
+  \item Screening Router (Choke): Filters traffic at network level
+  \item Bastion Host: Secure System (with Auditing)
+  \item Application Gateaway (Proxy): Service that works on behalf of an application with access control
+  \item Dual-homed Gateaway: System with two network cards and routing disabled
+\end{itemize}
+
 \end{document}
