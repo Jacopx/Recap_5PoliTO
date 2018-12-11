@@ -1375,7 +1375,53 @@ There is also a local/personal version of the firewall that is directly installe
 
 A firewall is 100\% effective only for attacks over/against blocked channels, the other channels require specific protection, VPN IDS or Application level security.
 
-\subsection{Intrusion Detection System (IDS)}
+\subsection{IDS: Intrusion Detection System}
+A system to identify individuals using a computer or a network without authorization, also for identify authorized users violating their privileges. The basic idea is that the behavioural "pattern" is different between auth and not-auth. There are 2 types of IDS:
+\begin{itemize}
+  \item \textbf{Passive}: Notify after attack (Crypto checksum, pattern matching)
+  \item \textbf{Active}: Notify during attack (Learn, Monitoring, Reaction)
+\end{itemize}
+There are also 2 topological features:
+\begin{itemize}
+  \item \textbf{HIDS} \textit{Host-based IDS}: Log analysis and internal OS monitoring tools
+  \item \textbf{NIDS} \textit{Network-based IDS}: Network traffic monitoring tools
+\end{itemize}
+The \textbf{SIV} \textit{System Integrity Verifier} it checks files/filesystems looking for changes, the \textbf{LFM} \textit{Log File Monitor} checks the log files lookings for known patterns of successful attacks or attempts.\\
+The NIDS is composed of 3 main parts (fig. \ref{fig:NIDS_arch}):
+\begin{itemize}
+  \item Sensor:
+  \begin{itemize}
+    \item Check traffic and logs looking for suspect patterns
+    \item Generate relevant security events
+    \item Interacts with the system (ACLs, TCP reset, etc...)
+  \end{itemize}
+  \item Director:
+  \begin{itemize}
+    \item Coordinates the sensors
+    \item Manage the security DB
+  \end{itemize}
+  \item IDS Message System
+  \begin{itemize}
+    \item Secure and Reliable communication among the IDS components
+  \end{itemize}
+\end{itemize}
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/NIDS_arch.png}
+   \caption{NIDS Architecture}
+   \label{fig:NIDS_arch}
+\end{figure}
 
+\subsection{IPS: Intrusion Prevention System}
+To speed-up and automate the reaction to intrusions = IDS + Distributes Dynamic Firewall. This is not a product, is a technology, with large impact on many elements of the protection system. It could be dageorus and block innocent traffic. Is often integrated in a single product IDPS.
+
+\subsection{NGFW: Next-Generation Firewall}
+They can identify application, whatever network is used and, if possible, deciphering/re-chipering the traffic. Allows also user authentication and per-user or per-application policies. Another feature is the filtering based also upon know vulnabilities, threats, malware, etc...
+
+\subsection{UTM: Unified Threat Management}
+They are integration of several products in a single device (FW, VPN, IPS, IDS, etc...), the capabilities depends upon the manufacturer. An example is Sophos.
+
+\subsection{Honey Pot}
+The honey pot is a social solution to attract the attacker to some server in order to remove the interest over other more critical hosts.
 
 \end{document}
