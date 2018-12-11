@@ -1285,12 +1285,97 @@ Firewall is something that can't be buyed, is designed. Of course an increased o
   \item The FW must be a highly secure system itself
 \end{itemize}
 Two authorization policies can be exploited, one is the \textbf{whitelisting} where \textit{"All that is not explictly permitted, is forbidden"} that guarantee more security with an increase of difficulties to manage. The other solution, \textbf{blacklisting}, is \textit{"All that is not explictly forbidden, is permitted"} this is less secure because everything is open, but is more easy to be managed.\\
-The basic component of a FW are:
+The basic options for a FW are:
 \begin{itemize}
   \item Screening Router (Choke): Filters traffic at network level
   \item Bastion Host: Secure System (with Auditing)
   \item Application Gateaway (Proxy): Service that works on behalf of an application with access control
   \item Dual-homed Gateaway: System with two network cards and routing disabled
 \end{itemize}
+The screening router architecture exploits the router to filter the traffic both at ip and upper levels, it not require dedicated hardware, it not require a proxy and it not require modification over the application. Is simple, easy, cheap and INSECURE. (fig. \ref{fig:screening})\\
+The dual-homed gateaway instead is easy to implement, require small additional hardware, it can masquared the internal network. The main problem is the is unflexible and have a large work overhead. (fig. \ref{fig:dual-homed})\\
+\begin{figure}[h!]
+  \centering
+  \begin{minipage}{.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{images/screening.png}
+    \caption{Screening Router}
+    \label{fig:screening}
+  \end{minipage}\hfill
+  \begin{minipage}{.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{images/dual-homed.png}
+    \caption{Dual-homed}
+    \label{fig:dual-homed}
+  \end{minipage}\hfill
+\end{figure}
+Another solution is the screened host (fig. \ref{fig:screened-host}), the router:
+\begin{itemize}
+  \item Blocks INT $\rightarrow$ EXT unless from the bastion
+  \item Blocks EXT $\rightarrow$ INT unless goes to the bastion
+  \item Exception: Directly enabled services
+\end{itemize}
+The bastion host runs cirtuit/application gateaway to control the authorized services, is more expensive and complex to manage. Is more flexible. Only the hosts/protocols passing through the bastion can be masked (unless the router uses NAT). There is also a screened subnet architecture (fig. \ref{fig:screened-subnet}), that is makes uses of the \textbf{DMZ} \textit{De-Militarized Zone}, that is a home not only to the gateway but also to other hosts, typically publis servers. The routing can be configured so that internal network is unknown. This solution is more expensive. To reduce the cost, a similar solution can be achieved with the three-legged firewall (fig. \ref{fig:3leg}).
+\begin{figure}[h!]
+  \centering
+  \begin{minipage}{.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{images/screened-host.png}
+    \caption{Screened Host}
+    \label{fig:screened-host}
+  \end{minipage}\hfill
+  \begin{minipage}{.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{images/screened-subnet.png}
+    \caption{Screened Subnet}
+    \label{fig:screened-subnet}
+  \end{minipage}\hfill
+\end{figure}
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/3leg.png}
+   \caption{Three-legged Firewall}
+   \label{fig:3leg}
+\end{figure}
+
+\paragraph{Techologies} There are different solutions that can be exploited to create a firewall. The difference are over perfomance, protection and over the breaking paradigm client-server.\\
+The \textbf{Packet Filter} is historically available on routers and it performs packet inspection at network level, IP and transport header. THe advantages are the it scale good and makes good approximate controls. It provide good performances. It's also cheap. It has some problems with dynamically allocated ports service, it is complex to be configured and user authentication is difficult. There is also a dynamic (state-aware) version, it can distinguish from new connections from those already open it give also state informations from the transport or application level. The performance are better than the normal solution. It keep some limitations for static packet filtering.\\
+The \textbf{Application-level gateway} are composed by a set of proxies inspecting the packet payload at application level. Often requires modifications to the client application, it may optionally mask the internal IP addresses, when used as part of a firewall, it performs peer authentication. It give a top security (e.g. buffer overflow of the target application). There is also a difference between forward-proxy and reverse-proxy. In this solution, the rules a more fine-grained and simpler than those of packet filter. Every application needs a spcific proxy. This solution completely breaks the client/server model, this achive more protection for the server, it may authenticate the client but is nor transparent for it. Some problem can araise with application-level security (SSL/TLS).\\
+The \textbf{Circuit Level gateaway} is a generic proxy, not application-aware, it creates a transport-level circuit between client and server but it doesn; t understand or manipulate in any way the payload data. It breaks the TCP/UDP level client/server model during the connection:
+\begin{itemize}
+  \item More protection for server: Isolate from attacks of TCP Handshake or IP Fragementation
+  \item May authenticate the client: This require modification to the application
+\end{itemize}
+It still exhibits many limitations of the packet filter. SOCKS is the most famous one.\\
+\textbf{HTTP Forward Proxy} is an HTTP server acting just as a front-end and then passing request to the real server (external). The benefits (besides network ACL):
+\begin{itemize}
+  \item Shared cache of external pages for all internal users
+  \item Authentication + authorization of internal users
+  \item Various controls
+\end{itemize}
+Instead, the \textbf{HTTP Reverse Proxy} is an HTTP server acting just as a front-end for the real server(s) which the requests are passed to. The benefits (besides network ACL \& content inspection):
+\begin{itemize}
+  \item Obfuscation: No info about real server
+  \item SSL accelerator (with unprotected back-end connections)
+  \item Load balancer
+  \item Web Accelerator (cache for static content)
+  \item Compression
+  \item Spoon Feeding (Gets from server a whole dynamic page and feed it to the client according to its speed, unload server)
+\end{itemize}
+The reverse proxy can be implemented in different configurations:
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/reverse_config.png}
+   \caption{Reverse Proxy Configuration}
+   \label{fig:reverse_config}
+\end{figure}
+The \textbf{WAF} \textit{Web Application Firewall} is really used for web application, is a module (plugin of NGINX or Apache) instead of a proxy, and is used to filter application traffic.\\
+The \textbf{Stealh Firewall} is a FW without IP address, so that it cannot be directly attacked, it performs physical packet interception by setting interfaces in promiscous mode. It copies or discard network traffic without altering them.\\
+There is also a local/personal version of the firewall that is directly installed at the node to be protected, is typically a packet filter. Is important to limit the diffusion of malware and trojans, or plain configuration mistakes. Of course the sys management must be separate from the firewall management.\\
+
+A firewall is 100\% effective only for attacks over/against blocked channels, the other channels require specific protection, VPN IDS or Application level security.
+
+\subsection{Intrusion Detection System (IDS)}
+
 
 \end{document}
