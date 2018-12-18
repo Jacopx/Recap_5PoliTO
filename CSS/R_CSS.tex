@@ -1424,4 +1424,87 @@ They are integration of several products in a single device (FW, VPN, IPS, IDS, 
 \subsection{Honey Pot}
 The honey pot is a social solution to attract the attacker to some server in order to remove the interest over other more critical hosts.
 
+\section{E-Mail Security}
+The \textbf{MHS} (\textit{Message Handling System}) is the flow in charge of trasporting the mail messages. The figure below shown the flow:
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/MHS.png}
+   \caption{Message Handling System}
+   \label{fig:MHS}
+\end{figure}
+The different part are:
+\begin{itemize}
+  \item \textbf{MUA}: Message User Agent
+  \item \textbf{MSA}: Message Submission Agent
+  \item \textbf{MTA}: Message Transfer Agent
+  \item \textbf{MS}: Message Store
+\end{itemize}
+There are different solution for acccessing the mail system:
+\begin{itemize}
+  \item Client-Server Mail
+  \item WebMail
+\end{itemize}
+\begin{figure}[h!]
+  \centering
+  \begin{minipage}{.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{images/cs_mail.png}
+    \caption{Client-Server}
+    \label{fig:cs_mail}
+  \end{minipage}\hfill
+  \begin{minipage}{.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{images/webmail.png}
+    \caption{WebMail}
+    \label{fig:webmail}
+  \end{minipage}\hfill
+\end{figure}
+The main standard for the exchange are:
+\begin{itemize}
+  \item \textbf{SMTP}: Simple Mail Transfer Protocol [TCP@25 - TCP@587]
+  \item \textbf{POP}: Post Office Protocol [TCP@110]
+  \item \textbf{IMAP}: Internet Message Acces Protocol [TCP@143]
+\end{itemize}
+The message standard was defined in the RFC-822, it use only US-ASCII characters on 7 bits, the line are terminated by CR+LF and is composed by header + body. The header is composed of multiple fields:
+\begin{itemize}
+  \item From (logical) - Sender (operational)
+  \item Organization
+  \item To
+  \item Subject
+  \item Date
+  \item Received (Intermediate Steps)
+  \item Message-Id (sending ID)
+  \item CC - BCC (Copy to)
+  \item Return-Receipt-To
+\end{itemize}
+The main problems of the mail are: Connectionless system (store and forward), the untrusted MTA, the security of MS, the mailing-list encryption and the compatibility with what is already installed.\\
+
+\subsection{Spamming}
+One of the most known problems of the mail is the spamming, also know as \textbf{UBE} \textit{Unsolicited Bulk Email} or \textbf{UCE} \textit{Unsolicited Commercial Email}, is the sending of unwanted messages: unauthorised advertisement, attacks like malware and phising and so on. Today is nearly the 88\% of the toal email traffic, this means heavy load on servers and network channels and also annoyance to the users. The opposite of the spam is the ham.\\
+\paragraph{Spamming strategies} are hiding the real sender, but using a valid sender, they are using special MTA with open mail relay (MTA that accept mail also not from/to its users), zombies or botnet and they are using content obfuscation to pass the filtering.\\
+A good anti-spam solution for MSA is to not configure your own MSA as an "open relay", but restrict its use only to authorized users. Is also important to authenticate the users of our MSA:
+\begin{itemize}
+  \item IP Address of MUA
+  \item Value of the filed FROM
+  \item SMTP authentication
+\end{itemize}
+Also reject or accept mail from an MTA, after checking a blacklist or whitelist like the DNS-based Blacklist. Another solution is the DNS-Blacklist by URI reputation, it has some problem to deteching new spammer, but is a good solution with honey pot.\\
+The most important \textbf{DNSBL} lists are:
+\begin{itemize}
+  \item MAPS RBL (Realtime Blackhole List)
+  \item Spamhaus SBL
+  \item SORBS (Spam and OpenRelay Blocking System)
+  \item APEWS (Anonymous Postmaster Early Warning System)
+\end{itemize}
+Exiting from this lists is not easy once inserted. Using \textbf{greylisting} will "temporarily reject" any email from a sender it does not recognize. If the mail is legitimate, the originating server will try again after a delay, and if sufficient time has elapsed, the email will be accepted. The main drawback is the delay of ham and the increase of server load.\\
+Other technique is the \textbf{DKIM} (\textit{Domain Keys Identified Mail}), a mail domain guarantee (via DS) the identity of the sender and the partial integrity of the message, the DS is created by the MSA or outgoing MTA, which covers some headers and part of the body and is verifiable via a public key.
+
+\paragraph{DMARC} is the (\textit{Domain-based Message Authentication, Reporting and Conformance}), used by service like Google, Yahoo!, PayPal and so on. Is based on some high levels principles:
+\begin{itemize}
+  \item Senders clearly opt-in by pushing DMARC policy
+  \item Receivers provide feedback so senders can close gaps
+  \item Senders increase level of authenticated email
+  \item Receivers can identify and block unauthenticated email
+\end{itemize}
+
 \end{document}
