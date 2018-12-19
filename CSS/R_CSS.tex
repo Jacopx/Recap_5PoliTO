@@ -1506,5 +1506,22 @@ Other technique is the \textbf{DKIM} (\textit{Domain Keys Identified Mail}), a m
   \item Senders increase level of authenticated email
   \item Receivers can identify and block unauthenticated email
 \end{itemize}
+Is build up DKIM and SPF, DKIM signature may work when a SPF path doesn't, SPF may work even if the sender screws up DKIM temporarily.
+It allows policy assertions to quarantine or block messages that do not authenticate. Collects also a lot of data for reporting. It improves over DKIM/SPF, some problems remain with indirect mails.
+
+\paragraph{ESMTP} is the extended version of SMTP, the base protocol and the communication channel is the same. The ESMTP clients must identify themselves to the communicating parties with: EHLO \textit{hostname}, if the server understands ESMTP it must declare the extensions that it supports, one per line, in its response to EHLO.\\
+The SMTP-auth is an another extension of ESMTP, it provides the AUTH command, plus some options of MAIL FROM, to authenticate a client before accepting messages from it. This solutions is useful against spamming.\\
+The auth can be of two types:
+\begin{itemize}
+  \item PLAIN: by passing the pwd and the id over a base64 (not ciphered)
+  \item CHALLENGE: by completing a challeng in order to verify identities
+\end{itemize}
+The challenge could be performed in two ways:
+\begin{itemize}
+  \item CRAM-MD5
+  \item DIGEST-MD5 (now replaced by SCRAM)
+\end{itemize}
+The first solution have some advantages: client auth via password, no replay and secure to sniffing. The main drawbacks are: no server authentication, cleartext storage of pwd, vulnerable to dictionary attacks, possible MITM.\\
+\textbf{SCRAM} instead is a Salted Challenge-Response Authentication Method, this methods allows a mutual authentication, difficult attacks against pwd in DB, is easier to be implemented and the standard encoding is UTF-8. SCRAM can be extended via \textbf{CB} (\textit{Channel Binding}) it associate a secure channel (typically encrypted) with an application exchange providing mutual authentication.
 
 \end{document}
