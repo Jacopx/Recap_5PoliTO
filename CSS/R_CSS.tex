@@ -1499,6 +1499,7 @@ The most important \textbf{DNSBL} lists are:
 Exiting from this lists is not easy once inserted. Using \textbf{greylisting} will "temporarily reject" any email from a sender it does not recognize. If the mail is legitimate, the originating server will try again after a delay, and if sufficient time has elapsed, the email will be accepted. The main drawback is the delay of ham and the increase of server load.\\
 Other technique is the \textbf{DKIM} (\textit{Domain Keys Identified Mail}), a mail domain guarantee (via DS) the identity of the sender and the partial integrity of the message, the DS is created by the MSA or outgoing MTA, which covers some headers and part of the body and is verifiable via a public key.
 
+\subsection{Protocols}
 \paragraph{DMARC} is the (\textit{Domain-based Message Authentication, Reporting and Conformance}), used by service like Google, Yahoo!, PayPal and so on. Is based on some high levels principles:
 \begin{itemize}
   \item Senders clearly opt-in by pushing DMARC policy
@@ -1522,6 +1523,22 @@ The challenge could be performed in two ways:
   \item DIGEST-MD5 (now replaced by SCRAM)
 \end{itemize}
 The first solution have some advantages: client auth via password, no replay and secure to sniffing. The main drawbacks are: no server authentication, cleartext storage of pwd, vulnerable to dictionary attacks, possible MITM.\\
-\textbf{SCRAM} instead is a Salted Challenge-Response Authentication Method, this methods allows a mutual authentication, difficult attacks against pwd in DB, is easier to be implemented and the standard encoding is UTF-8. SCRAM can be extended via \textbf{CB} (\textit{Channel Binding}) it associate a secure channel (typically encrypted) with an application exchange providing mutual authentication.
+\textbf{SCRAM} instead is a Salted Challenge-Response Authentication Method, this methods allows a mutual authentication, difficult attacks against pwd in DB, is easier to be implemented and the standard encoding is UTF-8. SCRAM can be extended via \textbf{CB} (\textit{Channel Binding}) it associate a secure channel (typically encrypted) with an application exchange providing mutual authentication to avoid a MITM as end-point for the encrypted channel which the intercepts the application data. There are two main classes:
+\begin{itemize}
+  \item Unique: Specific channel
+  \item End-point: Same channel for secure and application
+\end{itemize}
+The supported methods are based on SCRAM-SHA-1 and SCRAM-SHA-1-PLUS with the CB mode.
+
+\paragraph{SMTP+TLS} is the SMTP service extensione for SMTP over TLS, the option of EHLO is \textbf{STARTTLS}. If the negotiation of EHLO is succesful, the protocol status is reset (start again from EHLO and the extensions supported can be different). In case of insufficent security level, the client quit immediately and close the connection and the server responds to each command with code 554 (low security).
+
+\subsection{Security Services}
+The main security services are:
+\begin{itemize}
+  \item Integrity
+  \item Authentication: Identifies sender
+  \item Non repudiation
+  \item Confidentiality
+\end{itemize}
 
 \end{document}
