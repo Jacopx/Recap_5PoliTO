@@ -1540,5 +1540,72 @@ The main security services are:
   \item Non repudiation
   \item Confidentiality
 \end{itemize}
+Some possible ideas are:
+\begin{itemize}
+  \item No modification to the present MTA: Messages encoded to avoid problems when passing through gateaways or MTA non 8BITMIME
+  \item No modification to the present UA: Inconvenient user interface
+  \item Modification to the present UA: Better user interface
+  \item Symmetric Algorithms: Encryption of msg with message key
+  \item Asymmetric algorithms: Encrypt and exchange the symmetric key for digital signature
+  \item Public X.509 certificate for non repudiation
+  \item Msg security based only on the security of the UA of the recipient, not on the MTA security
+\end{itemize}
+There are some type of secure messages:
+\begin{itemize}
+  \item Clear-Signed: clear msg + DS; Only secure MUA can verify the signature
+  \item Signed: msg + digest encoded base64; Only secure MUA can decode and verify signature
+  \item Encrypted/Enveloped: encr msg + encr key encoded; Only secure MUA and keys holder can decrypt the message
+  \item Signed-Enveloped
+\end{itemize}
+The ways to create secure messages are:
+\begin{itemize}
+  \item Transform in canonical form: standard
+  \item MIC (\textit{Message Integrity Code}): Integrity and Authentication
+  \item Encryption: Confidentiality
+  \item Encoding: TO avoid modification by the MTA
+\end{itemize}
+Figure shows the main secure electronic mail formats:
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/smf.png}
+   \caption{Secure Electronic Mail Formats}
+   \label{fig:smf}
+\end{figure}
+
+\subsection{PGP: Pretty Good Privacy}
+Is a public protocol, created by Phil Zimmerman in 1991, to ensure authentication, integrity and confidentiality for electronic mail or private files. The goal is the same as PEM, is similar, but less structured. It make use of a peculiar way of public-key certification (trusted "friends" and trust propagation algebra). Is available for UNIX, MS-DOS, Mac, VMS, etc...
+\paragraph{Certification} each certificate has several signatures (those of all persons that trust the key owner). Trust is propagated transitively with some approximation: \textit{Completely, Partially, Untrusted or Unknown}. Figure shows the web of trust of PGP.
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/wt_pgp.png}
+   \caption{Web of Trust PGP}
+   \label{fig:wt_pgp}
+\end{figure}
+\paragraph{Key distribution} The pub-keys are stored individually by each eser (in its key-ring), they are distributed directly by the owner (PGP Party) or by a key-server.
+
+\subsection{MIME: Multipurpose Internet Mail Extensions}
+MIME is an Internet standard that extends the format of email to support:
+\begin{itemize}
+  \item Text in character sets other than ASCII
+  \item Non-text attachments: audio, video, images, application programs etc.
+  \item Message bodies with multiple parts
+  \item Header information in non-ASCII character sets
+\end{itemize}
+Virtually all human-written Internet email and a fairly large proportion of automated email is transmitted via SMTP in MIME format. Other 2 standard were born from the MIME, the MOSS and the S-MIME. They allows digital signature and encryption with X.509 certificates for the protection of MIME messages.
+\begin{figure}[H]
+   \centering
+   \includegraphics[width=\linewidth]{images/smime.png}
+   \caption{Secure Multimedia Electronic Mail}
+   \label{fig:smime}
+\end{figure}
+The S-MIME solution is promoted by RSA and it was standardized by RFC. A third version is available.\\
+The latest versions addresses the following subjects:
+\begin{itemize}
+  \item Signed Receipt: Signature on the return receipt of a mail
+  \item Security Label: Classification of messages
+  \item Secure Mailing-List
+  \item Signing Certificate: Signature certificate included in the signed attributes of a message
+\end{itemize}
+The architecture of S-MIME is based on: PKCS-7, CMS, PKCS-10 or X.509. The DS can be performed with various version of RSA or DSA, with SHA-1 and 256 or MD5. Encryption with AES or DES.
 
 \end{document}
