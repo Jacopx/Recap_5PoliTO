@@ -217,4 +217,22 @@ The following are know as \textbf{Filtering Patterns}:
   \item \textbf{Reducers}: Emit one (key, null) pair for each input (key, list of values) pair
 \end{itemize}
 
+\subsection{Multiple Inputs/Outputs}
+Hadoop allows the user to implements different input and/or outputs, it could be useful in some case. The input differentiation is achieved by using the addInputPath() method, the output one is achieved with addNamedOutput() method.
+
+\subsection{Distributed Cache}
+Some application need to share and cache (small) read-only files to performa efficently their tasks. These files should be accessible by all nodes of the cluster in an efficient way. The Distributed Cache is a facility provided by the Hadoop-based MapReduce framework to cache files.
+These files are specified in the Driver, during the initialization of the job, Hadoop create a local copy of the shared/cached files in all nodes which are used to execute some tasks of the job, the cache file is then read by the Mapper, usually in the setup method.
+Save with:
+\begin{center}
+  job.\textbf{addCacheFile}(new Path("hdfsPath").toUri());
+\end{center}
+And it is retived by using:
+\begin{center}
+  URI[] urisCachedFiles = context.\textbf{getCacheFiles()};
+\end{center}
+
+% \subsection{Data Organization Patterns}
+% Slide set #11
+
 \end{document}
