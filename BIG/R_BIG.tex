@@ -175,18 +175,46 @@ In some cases everything can be achived using the Mapper phase only. Of course, 
 \subsection{Setup and Cleanup methods}
 Are two optional methods to be invoked in the Mapper class, one at the start (Setup()) and the other at the end, both invoked one time for each mapper.
 
+\subsection{Patterns}
+Common patterns to solve problems. The following are know as \textbf{Summarization Patterns}:
+\paragraph{Numerical Summarizations} group records/objects by a key filed and calculate a numberical aggregate (avg, min, max, std deviations, etc...). Are used to provide a top-level view of large input data sets. They are used to analyze, by domain experts, trends or anomalies.\\
+The phase:
+\begin{itemize}
+  \item \textbf{Mappers}: Key is used to define groups, Value for computing aggregate statistics
+  \item \textbf{Reducers}: Receive a set of numerical values for each "group-by" key and compute the final stats
+  \item \textbf{Combiners}: Used to speed-up the process
+\end{itemize}
 
+\paragraph{Inverted Index Summarizations} the goal is to build an index from the input data to support faster search or data enrichment.
+\begin{itemize}
+  \item \textbf{Mappers}: Key is the set of fields to index (a keyword), Value is a unique identifier of the objects to associare with each "keyword"
+  \item \textbf{Reducers}: Receive a set of identifiers for each keyword and simply concatenate them
+  \item \textbf{Combiners}: Normally NOT used
+\end{itemize}
 
+\paragraph{Counting with Counters} the goal is to compute count summarizations of data sets. Also this solutions can be used to identify trends and anomalies.
+\begin{itemize}
+  \item \textbf{Mappers}: Process each input record and increment a set of counters
+\end{itemize}
+This pattern can be achived by using also MapOnly jobs, the result are directly printed by the Driver of the application.\\
 
+The following are know as \textbf{Filtering Patterns}:
+\paragraph{Filtering} has the goal to filter out input records that are not of interest and keep the others, in order to focusing only on the records of interest. The pourpose is to reduce the set of the data for the analysis.
+\begin{itemize}
+  \item \textbf{Mappers}: Output one pair for each record that satisfies the enforced rule
+  \item \textbf{Reducers}: Almost useless
+\end{itemize}
 
+\paragraph{Top K} is select a small set of top K record according to a ranking function. Used to focusing only on the most important (for the ranking function) values.
+\begin{itemize}
+  \item \textbf{Mappers}: Each mapper initializes an in-mapper top K list (small), cleanup emits the pairs after the complete scan
+  \item \textbf{Reducers}: a Single Instance compute the final top k list by merging the local lists
+\end{itemize}
 
-
-
-
-
-
-
-
-
+\paragraph{Distinct} it finds a unique set of values/records, prune the duplicates.
+\begin{itemize}
+  \item \textbf{Mappers}: Emit one (key, null) pair for each input record
+  \item \textbf{Reducers}: Emit one (key, null) pair for each input (key, list of values) pair
+\end{itemize}
 
 \end{document}
