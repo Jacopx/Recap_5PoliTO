@@ -214,7 +214,7 @@ The following are know as \textbf{Filtering Patterns}:
 \paragraph{Distinct} it finds a unique set of values/records, prune the duplicates.
 \begin{itemize}
   \item \textbf{Mappers}: Emit one (key, null) pair for each input record
-  \item \textbf{Reducers}: Emit one (key, null) pair for each input (key, list of values) pair
+  \item \textbf{Reducers}: Emit one (key, null) pair for each input (key, [list of values]) pair
 \end{itemize}
 
 \subsection{Multiple Inputs/Outputs}
@@ -232,7 +232,52 @@ And it is retived by using:
   URI[] urisCachedFiles = context.\textbf{getCacheFiles()};
 \end{center}
 
-% \subsection{Data Organization Patterns}
 % Slide set #11
+\subsection{Data Organization Patterns}
+\paragraph{Shuffling} is a technique used to randomize the order of the data, the motivations are:
+\begin{itemize}
+  \item Anonymization of data
+  \item Selecting a subset of random data
+\end{itemize}
+The structure is the following:
+\begin{itemize}
+  \item \textbf{Mappers}: Emit one (key (random), value) pair for each input record
+  \item \textbf{Reducers}: Emit one (key, null) pair for each value in [list of values] of the input (key, [list of values]) pair
+\end{itemize}
+
+\subsection{Metapatterns}
+\paragraph{Job Chaining} is the technique to execute a sequence of jobs (synchornizing them), the intent is to manage workflow of complex applications based on many phases.\\
+The driver (single instance) contains the whole workflow and it execute the jobs in the proper order.
+\begin{figure}[H]
+  \includegraphics[width=\linewidth]{images/chaining.png}
+  \caption{Job Chaining}
+  \label{fig:chaining}
+\end{figure}
+
+\subsection{Join Patterns}
+\paragraph{Reduce side natural join}
+The goal is to join the content of two relations (both large), this operation is useful in many applications.\\
+Suppose you want to join the following tables:
+\begin{itemize}
+  \item \textbf{Users}: userid, name, surname
+  \item \textbf{Likes}: userid, movieGenre
+\end{itemize}
+The record of the first table will be:
+\begin{center}
+  (userid=u1, "Users:name=Paolo,surname=Garza")
+\end{center}
+While the ones of the second table will be:
+\begin{center}
+  (userid=u1, "Likes:movieGenre=horror")
+  (userid=u1, "Likes:movieGenre=adventure")
+\end{center}
+The reducers iterate over the values associated with each key (value of the common attributes) and compute the "local natural join" for the current key. The output will be like the followings:
+\begin{itemize}
+  \item (userid=u1, "Users:name=Paolo,surname=Garza,movieGenre=horror")
+  \item (userid=u1, "Users:name=Paolo,surname=Garza,movieGenre=adventure")
+\end{itemize}
+
+\paragraph{Map side natural join} the goal is to join the content of the two relations, with a large and a small table (can be loaded in main memory). Is a \textbf{Map-only} job where the mapper process the content of the large table, the distributed cache is used to provide a copy of the small table to all mappers. The process is than a "local natural join" like in the previous pattern.\\
+Also the other kind of joins can be achieved.
 
 \end{document}
