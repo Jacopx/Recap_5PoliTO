@@ -80,6 +80,10 @@ The main characteristics are:
   \end{itemize}
 \end{itemize}
 
+% ==================================================================================
+%                                   APACHE HADOOP
+% ==================================================================================
+
 \section{Apache Hadoop}
 Scalable fault-tolerant distributed system for Big Data: Distributed Data Storage, Distributed Data Processing, etc...
 Is an Open Source project under Apache license. Is used by a lot of main IT companies all around the world.\\
@@ -279,5 +283,72 @@ The reducers iterate over the values associated with each key (value of the comm
 
 \paragraph{Map side natural join} the goal is to join the content of the two relations, with a large and a small table (can be loaded in main memory). Is a \textbf{Map-only} job where the mapper process the content of the large table, the distributed cache is used to provide a copy of the small table to all mappers. The process is than a "local natural join" like in the previous pattern.\\
 Also the other kind of joins can be achieved.
+
+\subsection{Relational Algebra Operations}
+The are a lot of useful operators in the SQL language: \textit{Selection, Projection, Union, Join, Aggregations, Group By, etc...}. The MapReduce paradigm can be used to implement relational operatos, however, the MR implementation is efficient only when a full scan of the input table is needed (selection are better performed by DBMS).\\
+Relations/Tables (also the big ones) can be stored in the HDFS distributed file system, they are broken in blocks and spread across the servers of the Hadoop cluster.\\
+By definition tables do not contain duplicate records, this constraint must be satisfied by both the input and the output tables.
+\paragraph{Selection} only the records that are satisfying a condition can be kept. The schema remain the same. This algebric operation can be achieved by using a filtering pattern.
+
+\paragraph{Projection} it can be achieved by the following structure:
+\begin{itemize}
+  \item \textbf{Mappers}: For each record select the proper attribute and emits a pair (key=attributeFiltered, value=null)
+  \item \textbf{Reducers}: Emit one (key, value) pair for each input with key=attributeFiltered and value=null
+\end{itemize}
+\paragraph{Union} merge two tables with the same schema, duplicates are removed. Everything can be achieved with the following structure:
+\begin{itemize}
+  \item \textbf{Mappers}: for each record, of each table, a pair (key=t, null) will be emitted
+  \item \textbf{Reducers}: Emit one (key, value) pair for each input (key, [list of values]) pair with key=t and value=null
+\end{itemize}
+
+\paragraph{Intersection} using 2 tables with the same schema, produce a third table with the records appearing on both relations.
+\begin{itemize}
+  \item \textbf{Mappers}: Emit one pair (key=t, value=t) for each record in both relations
+  \item \textbf{Reducers}: Emit one (key, value) pair for each input with key=t and value=null for pair containing 2 values.
+\end{itemize}
+
+\paragraph{Difference} similar to the previous Intersection, the Reducers, will emit a pair only if its contains 1 value.
+
+\paragraph{Join} can be implemented using the join patterns.
+
+\paragraph{Aggregations and Group By} are implemented by using summarization pattern.
+
+% ==================================================================================
+%                                   APACHE SPARK
+% ==================================================================================
+\clearpage
+\section{Apache Spark}
+\subsection{Introduction}
+Apache Spark is a fast and general-pourpose engine for large-scale data rpcoessing. Spark aims at achieving the following goals in the Big Data context:
+\begin{itemize}
+  \item \textbf{Generality}: Diverse worksload, operators, job size
+  \item \textbf{Low Latency}: sub-second
+  \item \textbf{Fault Tolerance}: Faults are the norm, not the exception
+  \item \textbf{Simplicity}: Often come from generality
+\end{itemize}
+Iterative jobs, with MapReduce, involve a lot of disk I/O for each iteration and stage, which are slow, even if it is local I/O. The idea behind spark is to reduce the I/O operations by keep more data in main memory. This solutions allow to increase the speed by 10 to 100 times.\\
+Data are represented as \textit{Resilient Distributed Datasers (\textbf{RDDs})}, they are partitioned/distributed collections of objects spread across the nodes of a clusters, stored in Main Memory (when it is possible) or on local disk.
+Spark programs are written in terms of operations on resilient distributed data sets. The RDDs are built and manipulated through a set of parallel transformations (map, filter, join, etc...) and actions (count, collect, save, etc...). In case of machine failures RDDs are automatically rebuilt. In the following table the difference between Spark and Hadoop:
+\begin{figure}[H]
+  \includegraphics[width=\linewidth]{images/versus.png}
+  \caption{MapReduce vs Spark}
+  \label{fig:versus}
+\end{figure}
+\paragraph{Structure} Spark is based on a basic component (the Spark Core) that is exploited by the high-level data analytics components. These provide a more uniform and efficient solution with respect to Hadoop where many non-integrated tools are available. When the efficency of the core component is increased also the efficency of the other high-level components increases.
+Th structure contains:
+\begin{itemize}
+  \item Task scheduling
+  \item Memory Management
+  \item Fault recovery
+\end{itemize}
+Spark support also SQL structured datas, also the Hive Query Language.\\
+Another important part of Spark is the \textbf{Spark Streaming} real-time, used to process live streams of data in real-time, the APIs used are similar to the one used to process standard and static resources.\\
+\textbf{MLlib} is a machine learning/data mining library, it can be used to apply the parallel versions of some ML/DM algorithms (data pre-processing and dimensional reduction, classification algorithms, clustering, itemset mining, etc...).\\
+\textbf{GraphX} is a grap processing library, it provides many algorithms for manipulating graphs:
+\begin{itemize}
+  \item Subgraph searching
+  \item PageRank
+\end{itemize}
+% \textbf{Spark Scheduler}
 
 \end{document}
