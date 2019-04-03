@@ -349,6 +349,42 @@ Another important part of Spark is the \textbf{Spark Streaming} real-time, used 
   \item Subgraph searching
   \item PageRank
 \end{itemize}
-% \textbf{Spark Scheduler}
+Spark can exploit many \textbf{Schedulers} to execute its applications:
+\begin{itemize}
+  \item Hadoop YARN
+  \item Mesos cluster
+  \item Standalone Spark Scheduler
+\end{itemize}
+
+\subsection{Basic Concepts}
+RDDs are the primary abstraction in Spark, are distributed collections of objects spread across the nodes of a clusters. They are split in partitions, each node of the cluster that is running an application contains at least one partition of the RDDs that is (are) defined in the application. RDDs are store in the main memory of executors running in the nodes of the cluster, when is possible, or in the local disk of the nodes if there is not enough main memory. This type of data allows execution in parallel, of the code, invoked on them. Are also immutable once constructed. Spark tracks lineage information to efficiently recompute lost data (due to failures).\\
+RDDs can be created:
+\begin{itemize}
+  \item By parallelizing existing collections of the hosting programming language
+  \item From large files stored in HDFS
+  \item From files stored in many traditional file systems or databases
+  \item By transforming an existing RDDs
+\end{itemize}
+
+\paragraph{Software structure} everything start from the main method, that defines the workflow of the application. The accesses to Spark is made available through the SparkContext object (a connection to the cluster). After the allocation of RDDs it invokes parallel operations over them.
+\begin{figure}[H]
+  \includegraphics[width=\linewidth]{images/execution.png}
+  \caption{Distributed execution of Spark}
+  \label{fig:execution}
+\end{figure}
+
+\paragraph{Terminology} defined by Spark:
+\begin{itemize}
+  \item \textbf{Application}: User program built on Spark (Driver, Executors)
+  \item \textbf{Application JAR}: A Jar containing the user's Spark application
+  \item \textbf{Driver Program}: The process running the main() function of the application and creating the SparkContext
+  \item \textbf{Cluster Manager}: An external service for acquiring resources on the cluster
+  \item \textbf{Deploy Mode}: Distinguishes where the driver process runs in CLUSTER or CLIENT mode
+  \item \textbf{Worker Node}: Any node of the cluster that can run application code in the cluster
+  \item \textbf{Executor}: A process launched for an application on a worker node, that runs tasks and keeps data in memory or disk storage across them
+  \item \textbf{Task}: A unit of work that will be sent to one executor
+  \item \textbf{Job}: A parallel computation consisting of multiple tasks that gets spawned in response to a Spark action
+  \item \textbf{Stage}: Each job gets divided into smaller sets of tasks called stages that depend on each other
+\end{itemize}
 
 \end{document}
