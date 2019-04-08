@@ -18,6 +18,30 @@
 \usepackage{listings}
 \usepackage{multicol}
 
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
 % Misure Documento
 \geometry{ a4paper, total={170mm,257mm},left=35mm, right=35mm, top=35mm, bottom=35mm }
 
@@ -81,7 +105,7 @@ The main characteristics are:
 \end{itemize}
 
 % ==================================================================================
-%                                   APACHE HADOOP
+% |                                  APACHE HADOOP                                 |
 % ==================================================================================
 
 \section{Apache Hadoop}
@@ -159,19 +183,19 @@ An example with the word count problem with clarify the usage of combiners.
 Is an instance of the Reducer class, that implements a pre-reduce phase, characterized by the reduce() method. It process (key, [list of value]) and emits (key, value). It runs on the cluster.\\
 Combiners and be also exploited by in-mapper solutions, by initialize a set of in-mapper variables during the instance of the Mapper. They are created by using setup/cleanup methods.\\
 Hadoop provides a set of vasic, built-in, counters to store some statistics about jobs, mappers and reducers. Also some ad-hoc, user-defined, counters can be defined. They can be used by the exploting enum Java types, and increment by using the following code:
-\begin{center}
-  \textit{context.getCounter(countername).increment(val ue);}
-\end{center}
+\begin{lstlisting}
+  context.getCounter(countername).increment(value);
+\end{lstlisting}
 
 \subsection{Configurations}
 Is possible to define some properties shared among the different part (M,C,R), they must be defined in the driver using the following syntax:
-\begin{center}
-  \textit{conf.set("property-name", "value");}
-\end{center}
+\begin{lstlisting}
+  conf.set("property-name", "value");
+\end{lstlisting}
 and they can be retrived in the Mapper and/or Reducer phase by using:
-\begin{center}
-  \textit{context.getConfiguration().get("property-name");}
-\end{center}
+\begin{lstlisting}
+  context.getConfiguration().get("property-name");
+\end{lstlisting}
 
 \subsection{Map-only job}
 In some cases everything can be achived using the Mapper phase only. Of course, Hadoop, allows the execution of this kind of jobs. Everything is achived by setting the number of reducers task to zero. \textbf{Not setting this value can generate problems during the executions}.
@@ -228,13 +252,13 @@ Hadoop allows the user to implements different input and/or outputs, it could be
 Some application need to share and cache (small) read-only files to performa efficently their tasks. These files should be accessible by all nodes of the cluster in an efficient way. The Distributed Cache is a facility provided by the Hadoop-based MapReduce framework to cache files.
 These files are specified in the Driver, during the initialization of the job, Hadoop create a local copy of the shared/cached files in all nodes which are used to execute some tasks of the job, the cache file is then read by the Mapper, usually in the setup method.
 Save with:
-\begin{center}
-  job.\textbf{addCacheFile}(new Path("hdfsPath").toUri());
-\end{center}
+\begin{lstlisting}
+  job.addCacheFile(new Path("hdfsPath").toUri());
+\end{lstlisting}
 And it is retived by using:
-\begin{center}
-  URI[] urisCachedFiles = context.\textbf{getCacheFiles()};
-\end{center}
+\begin{lstlisting}
+  URI[] urisCachedFiles = context.getCacheFiles();
+\end{lstlisting}
 
 % Slide set #11
 \subsection{Data Organization Patterns}
@@ -314,7 +338,7 @@ By definition tables do not contain duplicate records, this constraint must be s
 \paragraph{Aggregations and Group By} are implemented by using summarization pattern.
 
 % ==================================================================================
-%                                   APACHE SPARK
+% |                                 APACHE SPARK                                   |
 % ==================================================================================
 \clearpage
 \section{Apache Spark}
@@ -386,5 +410,52 @@ RDDs can be created:
   \item \textbf{Job}: A parallel computation consisting of multiple tasks that gets spawned in response to a Spark action
   \item \textbf{Stage}: Each job gets divided into smaller sets of tasks called stages that depend on each other
 \end{itemize}
+
+\subsection{RDD-based Programming}
+The SparkContext is the connection of the driver to the cluster, is build by means of the constructor of JavaSparkContext. Example:
+\begin{lstlisting}
+  SparkConf conf = new SparkConf().setAppName("Application name");
+  JavaSparkContext sc = new JavaSparkContext(conf);
+\end{lstlisting}
+\paragraph{RDD} are immutable distributed collection of objects, each split in partitions, this choice allows parallelizing the code based on RDDs. THey can contain any type of Scala, Java and Python Objects.\\
+The \textbf{creation} of an RDDs can be achieved in 2 ways:
+\begin{itemize}
+  \item Loading an external dataset: content of a folder, signle file, database table, etc.
+  \item Parallelizing a local collection of objects created in the driver
+\end{itemize}
+An RDD can be build from an input textual file. It is based on the textFile() method of the JavaSparkContext class. The created RDD is an RDD of Strings, each line of the input file is associated with an object of created RDD. If the input file is an HDFS file, the number of partitions of RDD, is equal to the number of HDFS block used to store the file. Partitions can be also defined manually.\\
+Is possible to build RDD from a local Java Objects by using the parallelize method of the JavaSparkContext.\\
+\textbf{Saving} RDDs can be easily achieved by store them in a textual (HDFS) file by using the method saveAsTextFile() of the JavaRDD class.\\
+The content of RDDs can be retrived from the nodes of the cluster and "stored" in a local Java variable of the Driver, is important to pay attention to the size of the RDD.
+\paragraph{Operations} there are two types of supported operations:
+\begin{itemize}
+  \item Transformations
+  \item Actions
+\end{itemize}
+The \textbf{transformations} are operations on RDDs that return a new RDD. They apply a transformation on the elements of the input and the result of the transformation is "stored in/associated to" a new RDD (they are immutable). They are computed lazily, only when action is applied on the RDDs generated by the transformation operations. Spark keeps track of the dependency between the input RDD and the new RDD returned by the transformation. This graph of depencencies between RDDs represents the information about which RDDs are used to create a new RDD; this is called \textbf{lineage graph} and is represented as a DAG (Direct Acyclic Graph). The graph is also useful for optimization purposes.\\
+The \textbf{actions} are operations that return results to the driver program or write the result in the storage.\\
+\paragraph{Functions to Transformations and Actions} Many transformations and some actions are based on user provided functions that specify which "transformation" function must be applied on each element of the input RDD. For example the filter() trans. selects the elements of an RDD satisfying a user specified constraint. The passing can be achieved in different ways in relations to the language, in Java is performed by passing objects of the classes that implement one of the Spark's function interfaces. The interfaces are many, here some of them:
+\begin{figure}[H]
+  \includegraphics[width=\linewidth]{images/interface.png}
+  \caption{Spark function interfaces}
+  \label{fig:interface}
+\end{figure}
+Lambdas function can be useful.
+\paragraph{Basic Transformations} some of them analyze the content of one single RDD and return a new RDD:
+\begin{itemize}
+  \item Filter \item Map \item flatMap \item Distinct \item Sample
+\end{itemize}
+Some others trans. analyze the content of two input RDDs and return a new one:
+\begin{itemize}
+  \item Union \item Intersection \item Subtract \item Cartesian
+\end{itemize}
+\paragraph{Filter()} is the name suggests, is a transformations used to get a new RDD with elements that are satisfying the condition proposed. Example: \textit{Only lines containing word: "error"}.
+\paragraph{Map()} method used to compute a function over the whole data contained in the RDD. Example: \textit{Creating an RDDs containing the length of each surname}. The returned RDD contains an element for each of the RDD of input. \paragraph{FlatMap()} is similar to Map(), but a set of elements (0-many) is returned. Example: \textit{input element x, the set of elements with values from x to 3 are returned}.
+\paragraph{Distinct()} applied on one single RDD and return a new RDD containing the list of distinct elements of the input RDD. Is an expensive operation.
+\paragraph{Sample()} it create a new RDD containing a random sample of the elements of the input RDD.\\
+These were all the transformations based on a single RDD. The following make use of 2 input RDDs and they are returning one only.
+\paragraph{Union()} it merge two RDDs, but \textbf{without} removing duplicates (can be achieved by passing RDD obtained by the union() to distinct()).
+\paragraph{Subtract()} generate an RDD which contains the elements appearing only in the RDD on which the subtract method is invoked and not in the RDD passed as parameter.
+\paragraph{Cartesian()} can be applied on RDDs of different data type, the return RDD is an RDD of pairs (JavaPairRDD) containing all the combinations composed on one element of the first input RDD and the second input RDD.
 
 \end{document}
